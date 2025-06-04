@@ -83,6 +83,7 @@
     </div>
   </div>
 </section>
+
 <section id="offers" class="bg-gray-900 text-white p-10 text-center">
   <h2 class="text-3xl font-bold mb-4">Exciting Offers Coming Soon!</h2>
   <p>Stay tuned for exclusive discounts and limited-time deals.</p>
@@ -140,21 +141,62 @@
     </section>
 
     <!-- Enquiry Form -->
-    <section class="p-10 bg-gray-800" id="enquiry">
-      <h2 class="text-4xl font-bold text-center mb-8">Book a Test Ride / Enquiry</h2>
-      <form class="max-w-2xl mx-auto space-y-6">
-        <input type="text" placeholder="Your Name" class="w-full p-3 rounded bg-gray-900 border border-gray-700" required />
-        <input type="email" placeholder="Your Email" class="w-full p-3 rounded bg-gray-900 border border-gray-700" required />
-        <input type="tel" placeholder="Phone Number" class="w-full p-3 rounded bg-gray-900 border border-gray-700" required />
-        <select class="w-full p-3 rounded bg-gray-900 border border-gray-700" required>
-          <option value="">Select Model</option>
-          <option value="rizta">Ather Rizta</option>
-          <option value="apex">Ather 450 Apex</option>
-        </select>
-        <textarea placeholder="Your Message" rows="4" class="w-full p-3 rounded bg-gray-900 border border-gray-700"></textarea>
-        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 py-3 rounded text-white font-semibold">Submit</button>
-      </form>
-    </section>
+<!-- Add EmailJS SDK -->
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  (function () {
+    emailjs.init("OXIEYsCW62swPiLKU"); // Your Public Key
+  })();
+</script>
+
+<section class="p-10 bg-gray-900 text-white min-h-screen" id="enquiry">
+  <h2 class="text-4xl font-bold text-center mb-10 text-green-400">Book a Test Ride / Enquiry</h2>
+  <form id="enquiryForm" class="max-w-2xl mx-auto space-y-6 bg-gray-800 p-10 rounded-2xl shadow-2xl border border-green-500">
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <input type="text" id="name" name="from_name" placeholder="Your Name" required
+        class="p-4 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-green-400" />
+      <input type="email" id="email" name="reply_to" placeholder="Your Email" required
+        class="p-4 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-green-400" />
+    </div>
+
+    <input type="tel" id="phone" name="phone" placeholder="Phone Number" required
+      class="w-full p-4 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-green-400" />
+
+    <select id="model" name="model" required
+      class="w-full p-4 rounded bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400">
+      <option value="">-- Select Model --</option>
+      <option value="Ather Rizta">Ather Rizta</option>
+      <option value="Ather 450 Apex">Ather 450 Apex</option>
+    </select>
+
+    <textarea id="message" name="message" rows="5" placeholder="Your Message"
+      class="w-full p-4 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-green-400"></textarea>
+
+    <button type="submit"
+      class="w-full bg-green-500 hover:bg-green-600 text-white py-3 font-bold text-lg rounded transition-all duration-300">
+      Submit
+    </button>
+
+    <p id="statusMessage" class="text-center text-green-400 hidden mt-4">✅ Thank you! Your enquiry has been sent.</p>
+  </form>
+</section>
+
+<script>
+  document.getElementById("enquiryForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    emailjs.sendForm("service_ujs5fvk", "template_y5p2i0q", this)
+      .then(function () {
+        document.getElementById("statusMessage").classList.remove("hidden");
+        document.getElementById("enquiryForm").reset();
+      }, function (error) {
+        alert("Oops! Something went wrong:\n" + JSON.stringify(error));
+      });
+  });
+</script>
+
+
 
     <!-- Footer -->
     <footer class="text-center p-6 bg-gray-900 text-gray-400">
