@@ -1,253 +1,974 @@
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ather Chikiti</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ather Chikiti - Official Electric Scooter Dealership | Odisha</title>
+    <meta name="description" content="Ather Chikiti - Authorized dealer for Ather Energy electric scooters in Odisha. Explore Ather 450X, Rizta, and 450S models. Book test rides, service support, and genuine parts available.">
     
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-  </head>
-  <body class="bg-gray-900 text-white font-sans">
-    <!-- Hero Banner -->
-    <section class="relative h-screen w-full bg-cover bg-center flex items-center justify-center" style="background-image: url('./banner3.webp');">
-      <div class="bg-black bg-opacity-60 p-10 rounded-lg text-center w-full max-w-4xl mx-auto animate-fade-in-up">
-        <h1 class="text-5xl font-bold mb-2">Welcome to Ather Chikiti</h1>
-        <p class="text-xl mb-6">Redefining the way you ride.</p>
-        <div class="flex flex-col md:flex-row justify-center gap-6">
-          <a href="#models" class="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded text-white font-semibold">Explore Models</a>
-          <a href="#enquiry" class="bg-green-500 hover:bg-green-600 px-6 py-3 rounded text-white font-semibold">Enquiry Now</a>
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" type="image/svg+xml">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #111827;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Utility Classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #10b981;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: #d1d5db;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Models Section */
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .model-card {
+            background: #1f2937;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #374151;
+        }
+
+        .model-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);
+        }
+
+        .model-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .model-content {
+            padding: 1.5rem;
+        }
+
+        .model-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #10b981;
+        }
+
+        .model-specs {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .model-specs li {
+            padding: 0.25rem 0;
+            color: #d1d5db;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            background: #1f2937;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 2rem;
+            background: #111827;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.1);
+        }
+
+        .benefit-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #d1d5db;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: #374151;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        /* Contact */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            background: #1f2937;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: #1f2937;
+        }
+
+        .testimonial-card {
+            background: #111827;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border-left: 4px solid #10b981;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #111827;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .models-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 0.5rem;
+            }
+
+            .section {
+                padding: 40px 0;
+            }
+        }
+
+        /* Section titles */
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #10b981;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.125rem;
+            color: #d1d5db;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Loading animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #374151;
+            border-top: 4px solid #10b981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Electric pulse animation */
+        .electric-pulse {
+            animation: electric-pulse 2s infinite;
+        }
+
+        @keyframes electric-pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(16, 185, 129, 0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="container">
+            <div class="nav">
+                <div class="logo">⚡ Ather Chikiti</div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#models">Models</a></li>
+                    <li><a href="#benefits">Benefits</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#enquiry">Book Test Ride</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content fade-in">
+                <h1>Experience the Future of Mobility</h1>
+                <p>Discover Ather's premium electric scooters at our authorized dealership in Chikiti, Odisha. Sustainable, smart, and stylish transportation for the modern world.</p>
+                <div class="hero-buttons">
+                    <a href="#enquiry" class="btn electric-pulse">Book Test Ride</a>
+                    <a href="#models" class="btn">Explore Models</a>
+                </div>
+            </div>
         </div>
-      </div>
     </section>
 
-<section class="p-10 text-center bg-black text-white">
-  <h2 class="text-4xl font-bold mb-10">Why Choose Electric?</h2>
-  <div class="h-20 flex justify-center items-center">
-    <div class="typewriter text-xl font-semibold"></div>
-  </div>
-</section>
-<script>
-  const messages = [
-    "Eco-Friendly — No emissions, less pollution, greener planet.",
-    "Low Running Cost — Save more with every kilometer.",
-    "Smart & Efficient — Connected rides and real-time data.",
-    "Government Subsidies — Save big with EV incentives.",
-    "Noise-Free Ride — Enjoy peaceful and silent commuting."
-  ];
+    <!-- Models Section -->
+    <section class="section" id="models">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Electric Scooter Models</h2>
+            <p class="section-subtitle fade-in">Choose from Ather's premium lineup of intelligent electric scooters designed for the future.</p>
+            
+            <div class="models-grid">
+                <div class="model-card fade-in">
+                    <img src="C:\Users\ASUS\OneDrive\Desktop\Ather Chikiti\2025-450-apex677cb151dcc48.avif" alt="Ather 450X" class="model-image">
+                    <div class="model-content">
+                        <h3>Ather 450X</h3>
+                        <p>The flagship model with premium features and performance.</p>
+                        <ul class="model-specs">
+                            <li>Range: 146 km (Eco mode)</li>
+                            <li>Top Speed: 90 km/h</li>
+                            <li>Charging Time: 5.4 hours</li>
+                            <li>Smart Dashboard with Navigation</li>
+                        </ul>
+                        <a href="#enquiry" class="btn">Book Test Ride</a>
+                    </div>
+                </div>
 
-  const el = document.querySelector('.typewriter');
-  let i = 0;
-  let char = 0;
+                <div class="model-card fade-in">
+                    <img src="C:\Users\ASUS\OneDrive\Desktop\Ather Chikiti\family-scooter661131531323a.avif" alt="Ather Rizta" class="model-image">
+                    <div class="model-content">
+                        <h3>Ather Rizta</h3>
+                        <p>Family-friendly electric scooter with enhanced comfort.</p>
+                        <ul class="model-specs">
+                            <li>Range: 123 km (Eco mode)</li>
+                            <li>Top Speed: 80 km/h</li>
+                            <li>Large Under-seat Storage</li>
+                            <li>Comfortable Seating for Two</li>
+                        </ul>
+                        <a href="#enquiry" class="btn">Book Test Ride</a>
+                    </div>
+                </div>
 
-  function typeMessage() {
-    if (char < messages[i].length) {
-      el.textContent += messages[i].charAt(char++);
-      setTimeout(typeMessage, 50);
-    } else {
-      setTimeout(() => {
-        el.textContent = '';
-        char = 0;
-        i = (i + 1) % messages.length;
-        typeMessage();
-      }, 3000);
-    }
-  }
+                <div class="model-card fade-in">
+                    <img src="C:\Users\ASUS\OneDrive\Desktop\Ather Chikiti\2025-450s677cb40877ef4.avif" alt="Ather 450S" class="model-image">
+                    <div class="model-content">
+                        <h3>Ather 450S</h3>
+                        <p>Perfect balance of performance and affordability.</p>
+                        <ul class="model-specs">
+                            <li>Range: 115 km (Eco mode)</li>
+                            <li>Top Speed: 90 km/h</li>
+                            <li>Fast Charging Support</li>
+                            <li>Smart Features Enabled</li>
+                        </ul>
+                        <a href="#enquiry" class="btn">Book Test Ride</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  typeMessage();
-</script>
+    <!-- Benefits Section -->
+    <section class="section benefits" id="benefits">
+        <div class="container">
+            <h2 class="section-title fade-in">Why Choose Ather Electric Scooters?</h2>
+            <p class="section-subtitle fade-in">Experience the benefits of intelligent electric mobility with advanced technology and sustainable transportation.</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">🌱</div>
+                    <h3>Zero Emissions</h3>
+                    <p>Contribute to a cleaner environment with 100% electric power and zero tailpipe emissions.</p>
+                </div>
 
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">💰</div>
+                    <h3>Low Running Costs</h3>
+                    <p>Save significantly on fuel costs with affordable electricity charging and minimal maintenance.</p>
+                </div>
 
-<!-- Models Section -->
-<section class="p-10" id="models">
-  <h2 class="text-4xl font-bold text-center mb-8">Explore Ather Models</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-    <!-- Ather Rizta -->
-    <div class="group bg-gray-800 p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl overflow-hidden relative" data-aos="fade-right">
-      <img src="./family-scooter661131531323a.avif" class="w-full h-64 object-cover rounded" alt="Rizta Model" />
-      <div class="absolute inset-0 bg-black bg-opacity-80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-6 flex flex-col justify-center items-center text-center">
-        <h3 class="text-2xl font-semibold">Ather Rizta</h3>
-        <p class="mt-2">Designed for family comfort with class-leading storage, smart features, and extended range for everyday convenience.</p>
-      </div>
-    </div>
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">📱</div>
+                    <h3>Smart Technology</h3>
+                    <p>Advanced dashboard, navigation, remote diagnostics, and smartphone connectivity.</p>
+                </div>
 
-    <!-- Ather 450 Apex -->
-    <div class="group bg-gray-800 p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl overflow-hidden relative" data-aos="fade-left">
-      <img src="./2025-450-apex677cb151dcc48.avif" class="w-full h-64 object-cover rounded" alt="450 Apex Model" />
-      <div class="absolute inset-0 bg-black bg-opacity-80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-6 flex flex-col justify-center items-center text-center">
-        <h3 class="text-2xl font-semibold">Ather 450 Apex</h3>
-        <p class="mt-2">The fastest and most advanced scooter by Ather yet – sporty, responsive, and futuristic in both design and performance.</p>
-      </div>
-    </div>
-  </div>
-</section>
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Fast Charging</h3>
+                    <p>Quick charging solutions with Ather Grid network and home charging options.</p>
+                </div>
 
-<section id="offers" class="bg-gray-900 text-white p-10 text-center">
-  <h2 class="text-3xl font-bold mb-4">Exciting Offers Coming Soon!</h2>
-  <p>Stay tuned for exclusive discounts and limited-time deals.</p>
-</section>
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">🛡️</div>
+                    <h3>Reliable Service</h3>
+                    <p>Comprehensive warranty, genuine parts, and expert service support at our dealership.</p>
+                </div>
 
-<!-- Featured Ather Section -->
-<section class="relative py-20 px-6 md:px-16 bg-gradient-to-br from-white via-gray-100 to-gray-200 text-gray-900 overflow-hidden" data-aos="fade-up" data-aos-duration="1000">
-
-  <!-- Decorative Glow -->
-  <div class="absolute top-0 -left-10 w-80 h-80 bg-green-400 opacity-10 rounded-full blur-3xl animate-pulse"></div>
-  <div class="absolute bottom-0 -right-10 w-80 h-80 bg-blue-400 opacity-10 rounded-full blur-3xl animate-pulse"></div>
-
-  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
-    
-    <!-- Left Text Block -->
-    <div class="space-y-6" data-aos="fade-right" data-aos-delay="300">
-      <div class="inline-flex items-center gap-2 bg-green-600 text-white text-sm font-semibold px-4 py-1 rounded-full shadow-lg animate-bounce w-fit">
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.974a1 1 0 00.95.69h4.184c.969 0 1.371 1.24.588 1.81l-3.39 2.463a1 1 0 00-.364 1.118l1.286 3.974c.3.921-.755 1.688-1.54 1.118l-3.39-2.463a1 1 0 00-1.175 0l-3.39 2.463c-.784.57-1.838-.197-1.539-1.118l1.285-3.974a1 1 0 00-.364-1.118L2.05 9.401c-.783-.57-.38-1.81.588-1.81h4.183a1 1 0 00.951-.69l1.286-3.974z"/></svg>
-        <span>New Arrival</span>
-      </div>
-
-      <h2 class="text-5xl font-extrabold tracking-tight">Ather Rizta</h2>
-      <p class="text-xl">Starting at just <strong class="text-green-700">₹99,999</strong></p>
-      <p class="text-sm text-gray-700">Or Flexipay <strong>₹2,199/month</strong> <span class="text-xs">(T&C apply)</span></p>
-
-      <div class="flex flex-col sm:flex-row gap-4 pt-6">
-        <a href="#enquiry" class="bg-black text-white px-6 py-3 rounded-lg font-semibold transition transform hover:scale-105 hover:bg-gray-800 shadow-md hover:shadow-xl">
-          🚀 Book Now
-        </a>
-        <a href="#offers" class="px-6 py-3 text-blue-600 font-semibold hover:text-blue-800 transition underline">
-          🎁 Explore Offers
-        </a>
-      </div>
-    </div>
-
-    <!-- Right Image -->
-    <div class="relative w-full flex justify-center md:justify-end" data-aos="fade-left" data-aos-delay="500">
-      <img src="./family-scooter661131531323a.avif" alt="Ather Rizta" class="w-full max-w-md rounded-xl transform hover:scale-105 transition duration-700 ease-in-out shadow-xl border-4 border-white" />
-    </div>
-  </div>
-</section>
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">🚀</div>
+                    <h3>Performance</h3>
+                    <p>Instant torque, smooth acceleration, and superior riding experience in all conditions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
 
-
-
-
-    <!-- Gallery Section -->
-    <section class="p-10">
-      <h2 class="text-4xl font-bold text-center mb-8">Showroom Glimpse</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <img src="./interior1.png" alt="Interior 1" class="rounded shadow" data-aos="zoom-in" />
-        <img src="./interior2.png" alt="Interior 2" class="rounded shadow" data-aos="zoom-in" data-aos-delay="100" />
-        <img src="./interior3.png" alt="Interior 3" class="rounded shadow" data-aos="zoom-in" data-aos-delay="200" />
-      </div>
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <h2 class="section-title fade-in">About Ather Chikiti</h2>
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p class="fade-in" style="font-size: 1.125rem; color: #d1d5db; margin-bottom: 2rem;">
+                    As the authorized Ather Energy dealership in Chikiti, Odisha, we are committed to bringing you the future of electric mobility. Our team of certified technicians and sales experts are here to help you transition to sustainable transportation with confidence.
+                </p>
+                <p class="fade-in" style="color: #d1d5db; margin-bottom: 2rem;">
+                    We offer comprehensive services including test rides, sales, service, spare parts, and charging solutions. Our mission is to make electric mobility accessible and convenient for everyone in our community.
+                </p>
+                <a href="#contact" class="btn fade-in">Visit Our Showroom</a>
+            </div>
+        </div>
     </section>
 
     <!-- Enquiry Form -->
-<!-- Add EmailJS SDK -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  (function () {
-    emailjs.init("OXIEYsCW62swPiLKU"); // Your Public Key
-  })();
-</script>
+    <section class="section benefits" id="enquiry">
+        <div class="container">
+            <h2 class="section-title fade-in">Book Your Test Ride</h2>
+            <p class="section-subtitle fade-in">Experience the future of mobility. Fill out the form below to schedule your test ride.</p>
+            
+            <div style="max-width: 600px; margin: 0 auto;">
+                <form id="enquiryForm" class="fade-in">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
 
-<section class="p-10 bg-gray-900 text-white min-h-screen" id="enquiry">
-  <h2 class="text-4xl font-bold text-center mb-10 text-green-400">Book a Test Ride / Enquiry</h2>
-  <form id="enquiryForm" class="max-w-2xl mx-auto space-y-6 bg-gray-800 p-10 rounded-2xl shadow-2xl border border-green-500">
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <input type="text" id="name" name="from_name" placeholder="Your Name" required
-        class="p-4 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-green-400" />
-      <input type="email" id="email" name="reply_to" placeholder="Your Email" required
-        class="p-4 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-green-400" />
-    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
 
-    <input type="tel" id="phone" name="phone" placeholder="Phone Number" required
-      class="w-full p-4 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-green-400" />
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
 
-    <select id="model" name="model" required
-      class="w-full p-4 rounded bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400">
-      <option value="">-- Select Model --</option>
-      <option value="Ather Rizta">Ather Rizta</option>
-      <option value="Ather 450 Apex">Ather 450 Apex</option>
-    </select>
+                    <div class="form-group">
+                        <label for="model">Preferred Model *</label>
+                        <select id="model" name="model" required>
+                            <option value="">Select a model</option>
+                            <option value="450X">Ather 450X</option>
+                            <option value="Rizta">Ather Rizta</option>
+                            <option value="450S">Ather 450S</option>
+                        </select>
+                    </div>
 
-    <textarea id="message" name="message" rows="5" placeholder="Your Message"
-      class="w-full p-4 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-green-400"></textarea>
+                    <div class="form-group">
+                        <label for="date">Preferred Test Ride Date</label>
+                        <input type="date" id="date" name="date">
+                    </div>
 
-    <button type="submit"
-      class="w-full bg-green-500 hover:bg-green-600 text-white py-3 font-bold text-lg rounded transition-all duration-300">
-      Submit
-    </button>
+                    <div class="form-group">
+                        <label for="message">Additional Message</label>
+                        <textarea id="message" name="message" rows="4" placeholder="Any specific requirements or questions..."></textarea>
+                    </div>
 
-    <p id="statusMessage" class="text-center text-green-400 hidden mt-4">✅ Thank you! Your enquiry has been sent.</p>
-  </form>
-</section>
+                    <button type="submit" class="btn" style="width: 100%;">Book Test Ride</button>
+                </form>
+            </div>
+        </div>
+    </section>
 
-<script>
-  document.getElementById("enquiryForm").addEventListener("submit", function (e) {
-    e.preventDefault();
+    <!-- Testimonials -->
+    <section class="section testimonials">
+        <div class="container">
+            <h2 class="section-title fade-in">What Our Customers Say</h2>
+            <p class="section-subtitle fade-in">Hear from satisfied Ather owners about their electric mobility experience.</p>
+            
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-text">
+                        "Switching to Ather 450X was the best decision I made. The smart features and zero emissions make my daily commute enjoyable and eco-friendly. The team at Ather Chikiti provided excellent service throughout the purchase process."
+                    </div>
+                    <div class="testimonial-author">- Rajesh Kumar, Software Engineer</div>
+                </div>
 
-    emailjs.sendForm("service_ujs5fvk", "template_y5p2i0q", this)
-      .then(function () {
-        document.getElementById("statusMessage").classList.remove("hidden");
-        document.getElementById("enquiryForm").reset();
-      }, function (error) {
-        alert("Oops! Something went wrong:\n" + JSON.stringify(error));
-      });
-  });
-</script>
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-text">
+                        "The Ather Rizta is perfect for my family. Comfortable seating, great storage space, and the peace of mind knowing we're contributing to a cleaner environment. Highly recommend Ather Chikiti for their professional service."
+                    </div>
+                    <div class="testimonial-author">- Priya Patel, Doctor</div>
+                </div>
 
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-text">
+                        "Amazing performance and smart technology! The 450S gives me the perfect balance of features and affordability. The charging network is expanding rapidly, making long rides worry-free."
+                    </div>
+                    <div class="testimonial-author">- Amit Sharma, Business Owner</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Gallery -->
+    <section class="section" id="gallery">
+        <div class="container">
+            <h2 class="section-title fade-in">Gallery</h2>
+            <p class="section-subtitle fade-in">Explore our showroom and see Ather scooters in action.</p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item fade-in">
+                    <img src="C:\Users\ASUS\OneDrive\Desktop\Ather Chikiti\interior1.png" alt="Ather Showroom">
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="C:\Users\ASUS\OneDrive\Desktop\Ather Chikiti\interior2.png" alt="Ather 450X Display">
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="C:\Users\ASUS\OneDrive\Desktop\Ather Chikiti\interior3.png" alt="Charging Station">
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Service Center">
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Test Ride">
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Happy Customers">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section benefits" id="contact">
+        <div class="container">
+            <h2 class="section-title fade-in">Contact Us</h2>
+            <p class="section-subtitle fade-in">Visit our showroom or get in touch for any inquiries about Ather electric scooters.</p>
+            
+            <div class="contact-grid">
+                <div class="contact-item fade-in">
+                    <div class="contact-icon">📍</div>
+                    <h3>Visit Our Showroom</h3>
+                    <p>123 Electric Avenue<br>Chikiti, Odisha 761013<br>India</p>
+                </div>
+
+                <div class="contact-item fade-in">
+                    <div class="contact-icon">📞</div>
+                    <h3>Call Us</h3>
+                    <p>Sales: +91 98765 43210<br>Service: +91 98765 43211<br>Mon-Sat: 9AM-7PM</p>
+                </div>
+
+                <div class="contact-item fade-in">
+                    <div class="contact-icon">✉️</div>
+                    <h3>Email Us</h3>
+                    <p>sales@atherchikiti.com<br>service@atherchikiti.com<br>info@atherchikiti.com</p>
+                </div>
+
+                <div class="contact-item fade-in">
+                    <div class="contact-icon">🕒</div>
+                    <h3>Opening Hours</h3>
+                    <p>Monday - Saturday<br>9:00 AM - 7:00 PM<br>Sunday: 10:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="text-center p-6 bg-gray-900 text-gray-400">
-      © 2025 Ather Chikiti. All Rights Reserved.
+    <footer style="background: #111827; padding: 2rem 0; text-align: center; border-top: 1px solid #374151;">
+        <div class="container">
+            <p style="color: #9ca3af;">© 2024 Ather Chikiti. All rights reserved. | Authorized Ather Energy Dealer</p>
+        </div>
     </footer>
 
-    <style>
-      @keyframes fade-in-up {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .animate-fade-in-up {
-        animation: fade-in-up 1s ease-out;
-      }
-
- .benefit-card {
-    width: 70%;
-    padding: 1rem;
-    background: #1f2937;
-    border-radius: 0.75rem;
-    box-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  @keyframes slideIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-slideIn {
-    animation: slideIn 0.8s ease-out forwards;
-  }
-
-  .delay-\[0s\] { animation-delay: 0s; }
-  .delay-\[1s\] { animation-delay: 1s; }
-  .delay-\[2s\] { animation-delay: 2s; }
-  .delay-\[3s\] { animation-delay: 3s; }
-  .delay-\[4s\] { animation-delay: 4s; }
-    </style>
-
     <script>
-      AOS.init();
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.getElementById('navMenu').classList.remove('active');
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with fade-in class
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Form submission
+        document.getElementById('enquiryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const name = formData.get('name');
+            const phone = formData.get('phone');
+            const email = formData.get('email');
+            const model = formData.get('model');
+            const date = formData.get('date');
+            const message = formData.get('message');
+
+            // Basic validation
+            if (!name || !phone || !email || !model) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // Phone validation (basic)
+            const phoneRegex = /^[+]?[\d\s-()]{10,}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('Please enter a valid phone number.');
+                return;
+            }
+
+            // Simulate form submission
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                alert(`Thank you, ${name}! Your test ride request for the Ather ${model} has been submitted. We'll contact you soon at ${phone}.`);
+                this.reset();
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+
+        // Header background change on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(17, 24, 39, 0.98)';
+            } else {
+                header.style.background = 'rgba(17, 24, 39, 0.95)';
+            }
+        });
+
+        // Set minimum date for test ride to today
+        const dateInput = document.getElementById('date');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+
+        // Add some interactivity to model cards
+        document.querySelectorAll('.model-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+        });
+
+        // Gallery lightbox effect (simple)
+        document.querySelectorAll('.gallery-item img').forEach(img => {
+            img.addEventListener('click', function() {
+                const lightbox = document.createElement('div');
+                lightbox.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.9);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                    cursor: pointer;
+                `;
+                
+                const imgClone = this.cloneNode();
+                imgClone.style.cssText = `
+                    max-width: 90%;
+                    max-height: 90%;
+                    object-fit: contain;
+                    border-radius: 8px;
+                `;
+                
+                lightbox.appendChild(imgClone);
+                document.body.appendChild(lightbox);
+                
+                lightbox.addEventListener('click', function() {
+                    document.body.removeChild(this);
+                });
+            });
+        });
+
+        // Add typing effect to hero title
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect after page load
+        setTimeout(() => {
+            const heroTitle = document.querySelector('.hero h1');
+            const originalText = heroTitle.textContent;
+            typeWriter(heroTitle, originalText, 50);
+        }, 1500);
+
+        console.log('Ather Chikiti website loaded successfully!');
     </script>
-  </body>
+</body>
 </html>
