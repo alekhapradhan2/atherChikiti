@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ather Chikiti</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-900 text-white font-sans">
+    <!-- Hero Banner -->
+    <section class="relative h-screen w-full bg-cover bg-center flex items-center justify-center" style="background-image: url('./banner3.webp');">
+      <div class="bg-black bg-opacity-60 p-10 rounded-lg text-center w-full max-w-4xl mx-auto animate-fade-in-up">
+        <h1 class="text-5xl font-bold mb-2">Welcome to Ather Chikiti</h1>
+        <p class="text-xl mb-6">Redefining the way you ride.</p>
+        <div class="flex flex-col md:flex-row justify-center gap-6">
+          <a href="#models" class="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded text-white font-semibold">Explore Models</a>
+          <a href="#enquiry" class="bg-green-500 hover:bg-green-600 px-6 py-3 rounded text-white font-semibold">Enquiry Now</a>
+        </div>
+      </div>
+    </section>
+
+<section class="p-10 text-center bg-black text-white">
+  <h2 class="text-4xl font-bold mb-10">Why Choose Electric?</h2>
+  <div class="h-20 flex justify-center items-center">
+    <div class="typewriter text-xl font-semibold"></div>
+  </div>
+</section>
+<script>
+  const messages = [
+    "Eco-Friendly — No emissions, less pollution, greener planet.",
+    "Low Running Cost — Save more with every kilometer.",
+    "Smart & Efficient — Connected rides and real-time data.",
+    "Government Subsidies — Save big with EV incentives.",
+    "Noise-Free Ride — Enjoy peaceful and silent commuting."
+  ];
+
+  const el = document.querySelector('.typewriter');
+  let i = 0;
+  let char = 0;
+
+  function typeMessage() {
+    if (char < messages[i].length) {
+      el.textContent += messages[i].charAt(char++);
+      setTimeout(typeMessage, 50);
+    } else {
+      setTimeout(() => {
+        el.textContent = '';
+        char = 0;
+        i = (i + 1) % messages.length;
+        typeMessage();
+      }, 3000);
+    }
+  }
+
+  typeMessage();
+</script>
+
+
+<!-- Models Section -->
+<section class="p-10" id="models">
+  <h2 class="text-4xl font-bold text-center mb-8">Explore Ather Models</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+    <!-- Ather Rizta -->
+    <div class="group bg-gray-800 p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl overflow-hidden relative" data-aos="fade-right">
+      <img src="./family-scooter661131531323a.avif" class="w-full h-64 object-cover rounded" alt="Rizta Model" />
+      <div class="absolute inset-0 bg-black bg-opacity-80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-6 flex flex-col justify-center items-center text-center">
+        <h3 class="text-2xl font-semibold">Ather Rizta</h3>
+        <p class="mt-2">Designed for family comfort with class-leading storage, smart features, and extended range for everyday convenience.</p>
+      </div>
+    </div>
+
+    <!-- Ather 450 Apex -->
+    <div class="group bg-gray-800 p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl overflow-hidden relative" data-aos="fade-left">
+      <img src="./2025-450-apex677cb151dcc48.avif" class="w-full h-64 object-cover rounded" alt="450 Apex Model" />
+      <div class="absolute inset-0 bg-black bg-opacity-80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-6 flex flex-col justify-center items-center text-center">
+        <h3 class="text-2xl font-semibold">Ather 450 Apex</h3>
+        <p class="mt-2">The fastest and most advanced scooter by Ather yet – sporty, responsive, and futuristic in both design and performance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- Gallery Section -->
+    <section class="p-10">
+      <h2 class="text-4xl font-bold text-center mb-8">Showroom Glimpse</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <img src="./interior1.png" alt="Interior 1" class="rounded shadow" data-aos="zoom-in" />
+        <img src="./interior2.png" alt="Interior 2" class="rounded shadow" data-aos="zoom-in" data-aos-delay="100" />
+        <img src="./interior3.png" alt="Interior 3" class="rounded shadow" data-aos="zoom-in" data-aos-delay="200" />
+      </div>
+    </section>
+
+    <!-- Enquiry Form -->
+    <section class="p-10 bg-gray-800" id="enquiry">
+      <h2 class="text-4xl font-bold text-center mb-8">Book a Test Ride / Enquiry</h2>
+      <form class="max-w-2xl mx-auto space-y-6">
+        <input type="text" placeholder="Your Name" class="w-full p-3 rounded bg-gray-900 border border-gray-700" required />
+        <input type="email" placeholder="Your Email" class="w-full p-3 rounded bg-gray-900 border border-gray-700" required />
+        <input type="tel" placeholder="Phone Number" class="w-full p-3 rounded bg-gray-900 border border-gray-700" required />
+        <select class="w-full p-3 rounded bg-gray-900 border border-gray-700" required>
+          <option value="">Select Model</option>
+          <option value="rizta">Ather Rizta</option>
+          <option value="apex">Ather 450 Apex</option>
+        </select>
+        <textarea placeholder="Your Message" rows="4" class="w-full p-3 rounded bg-gray-900 border border-gray-700"></textarea>
+        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 py-3 rounded text-white font-semibold">Submit</button>
+      </form>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center p-6 bg-gray-900 text-gray-400">
+      © 2025 Ather Chikiti. All Rights Reserved.
+    </footer>
+
+    <style>
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fade-in-up 1s ease-out;
+      }
+
+ .benefit-card {
+    width: 70%;
+    padding: 1rem;
+    background: #1f2937;
+    border-radius: 0.75rem;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slideIn {
+    animation: slideIn 0.8s ease-out forwards;
+  }
+
+  .delay-\[0s\] { animation-delay: 0s; }
+  .delay-\[1s\] { animation-delay: 1s; }
+  .delay-\[2s\] { animation-delay: 2s; }
+  .delay-\[3s\] { animation-delay: 3s; }
+  .delay-\[4s\] { animation-delay: 4s; }
+    </style>
+
+    <script>
+      AOS.init();
+    </script>
+  </body>
+</html>
