@@ -1,5 +1,8 @@
 
 let pendingNote = null;
+let pendingDeletePhone = null;
+const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
+
 function askNote(title, callback) {
   pendingNote = callback;
   document.getElementById('noteModalTitle').textContent = title;
@@ -35,8 +38,14 @@ window.addEventListener('click', (e) => {
   }
 });
 
+// window.addEventListener('DOMContentLoaded', () => {
+//   document.getElementById('confirmYesBtn').addEventListener('click', confirmDeleteYes);
+//   document.getElementById('confirmNoBtn').addEventListener('click', confirmDeleteNo);
+// });
+
+
 document.getElementById('logoutBtn').addEventListener('click', () => {
-  localStorage.removeItem('verified');
+sessionStorage.removeItem('verified');
   location.reload();
 });
 
@@ -148,9 +157,15 @@ function renderPaginationControls(totalItems){
 
   /* ---------- Staff pass‑code gate ---------- */
   let PASSCODE = '';
-  async function fetchPasscode() {
+async function fetchPasscode() {
+  if (isLocal) {
+    console.log('🛑 Local mode: Skipping fetchPasscode()');
+    PASSCODE = '1234'; // ✅ dummy passcode for testing
+    return;
+  }
+
   try {
-    const response = await fetch('https://sheetdb.io/api/v1/ignujv9v55stp'); // Replace with your actual SheetDB API
+    const response = await fetch('https://sheetdb.io/api/v1/jpzfmotebhmjp'); // Replace with your actual SheetDB API
     const data = await response.json();
     if (data && data.length > 0 && data[0].Password) {
       PASSCODE = data[0].Password;
@@ -161,6 +176,7 @@ function renderPaginationControls(totalItems){
     console.error('❌ Error fetching password:', error);
   }
 }
+
 const loader = document.getElementById('loader');
 const gate = document.getElementById('otpGate');
 const mainApp = document.getElementById('mainApp');
@@ -169,7 +185,7 @@ gate.style.display = 'none';
 
 // ✅ Optimized function
 async function initAppOnce() {
-  if (localStorage.getItem('verified') === 'yes') {
+  if (sessionStorage.getItem('verified') === 'yes') {
     loader.style.display = 'none';
     showApp(); // Calls initApp() which calls loadLeads()
   } else {
@@ -181,9 +197,11 @@ async function initAppOnce() {
 initAppOnce();
 
 
+
+
 otpBtn.addEventListener('click', () => {
   if (otpInput.value.trim() === PASSCODE) {
-    localStorage.setItem('verified', 'yes');
+    sessionStorage.setItem('verified', 'yes');
     showApp();
   } else {
     otpErr.style.display = 'block';
@@ -209,14 +227,21 @@ otpBtn.addEventListener('click', () => {
     const viewBody    = qs('#viewBody');
 
     /* === Config === */
-    const API_URL = 'https://sheetdb.io/api/v1/24ae0wb72a4u6';
+    const API_URL = 'https://sheetdb.io/api/v1/p90wo6yvmv2hv';
     let leads     = [];
     let viewingToday = false;
-
+document.querySelector('#enquiryModal h2').textContent = 'Edit Enquiry';
     /* === Bootstrap === */
     loadLeads();
-    createBtn.addEventListener('click',()=>{ enquiryModal.classList.add('active'); });
-    closeModal.addEventListener('click',()=>{ enquiryModal.classList.remove('active'); });
+    createBtn.addEventListener('click',()=>{ enquiryModal.classList.add('active'); });createBtn.addEventListener('click', () => {
+  enquiryModal.classList.add('active');
+  document.getElementById('enquiryForm').reset();
+  document.querySelector('#enquiryModal h2').textContent = 'Create New Enquiry';
+  document.getElementById('editMode').value = 'false';
+  document.getElementById('mobile').disabled = false;
+  document.getElementById('leadStatus').value = 'new';
+});
+closeModal.addEventListener('click',()=>{ enquiryModal.classList.remove('active'); });
     closeView.addEventListener('click',()=>{ viewModal.classList.remove('active'); });
     window.addEventListener('keydown',e=>{ if(e.key==='Escape'){ enquiryModal.classList.remove('active'); viewModal.classList.remove('active'); }});
     [searchInput,startDate,endDate].forEach(el=>el.addEventListener('input',renderTable));
@@ -228,24 +253,82 @@ otpBtn.addEventListener('click', () => {
 
     /* === CRUD helpers === */
 async function loadLeads() {
+    document.getElementById('tableLoader').style.display = 'block';
+  if (isLocal) {
+    console.log('🛑 Local mode: Skipping loadLeads() API call');
+    leads = [
+      {
+        date: '26/06/2025',
+        name: 'Test User',
+        phone: '9999999999',
+        email: 'test@example.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '28/06/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      },
+      {
+        date: '25/06/2025',
+        name: 'Jane Doe',
+        phone: '8888888888',
+        email: 'jane@example.com',
+        model: 'Model Y',
+        type: 'Online',
+        followup: '',
+        status: 'postponed',
+        notes: 'Follow-up later'
+      },      {
+        date: '26/06/2025',
+        name: 'Test User',
+        phone: '9999999999',
+        email: 'test@example.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '28/06/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      }
+  ];
+  renderTable();
+    renderTable();
+    return;
+  }
+
   try {
     const res = await fetch(API_URL);
     let allData = await res.json() || [];
-    
-    // Filter out entries that don't have a valid 'date' field
-    leads = allData.filter(l => l.date && l.date.includes('/'));
-    
+    leads = allData
+  .filter(l => l.date && l.date.includes('/'))
+  .map(l => ({
+    ...l,
+    followup_history: l.followup_history || '[]'
+  }));
+
     renderTable();
-  } catch(err) {
+  } catch (err) {
     console.error('Load error', err);
   }
 }
 
-    async function saveLead(data){
-      return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data})});
-    }
+
+async function saveLead(data){
+  if (isLocal) {
+    console.log('🛑 Local mode: saveLead() call skipped', data);
+    return;
+  }
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ data })
+  });
+}
 
     async function updateLead(phone,data){
+        if (isLocal) {
+    console.log('🛑 Local mode: saveLead() call skipped', data);
+    return;
+  }
       return fetch(`${API_URL}/phone/${phone}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({data})});
     }
 
@@ -260,33 +343,115 @@ enquiryForm.addEventListener('submit', async e => {
   submitMsg.style.display = 'none';
 
   const newLead = {
-    date: new Date().toLocaleDateString('en-GB'),
-    name: document.getElementById('fullName').value.trim(),
-    phone: document.getElementById('mobile').value.trim(),
-    email: document.getElementById('email').value.trim(),
-    model: document.getElementById('model').value,
-    type: document.getElementById('enquiryType').value,
-    followup: document.getElementById('followDate').value,
-    status: 'new',
-    notes: document.getElementById('notes').value.trim()
+      date: new Date().toLocaleDateString('en-GB'),
+      name: document.getElementById('fullName').value.trim(),
+      phone: document.getElementById('mobile').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      model: document.getElementById('model').value,
+      type: document.getElementById('enquiryType').value,
+      followup: document.getElementById('followDate').value,
+      status: document.getElementById('leadStatus').value || 'new',  // ✅ keep original status
+      notes: document.getElementById('notes').value.trim()
   };
   try {
-    await fetch(API_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({data: newLead})
+ if (document.getElementById('editMode').value === 'true') {
+  const phone = newLead.phone;
+  const lead = leads.find(l => l.phone === phone);
+  if (!lead) return;
+
+  const updatedFields = {};
+  const changes = [];
+
+  if (lead.name !== newLead.name) {
+    changes.push({ field: 'Full Name', from: lead.name || '', to: newLead.name });
+    updatedFields.name = newLead.name;
+  }
+
+  if (lead.phone !== newLead.phone) {
+    changes.push({ field: 'Mobile Number', from: lead.phone || '', to: newLead.phone });
+    updatedFields.phone = newLead.phone;
+  }
+
+  if (lead.email !== newLead.email) {
+    changes.push({ field: 'Email', from: lead.email || '', to: newLead.email });
+    updatedFields.email = newLead.email;
+  }
+
+  if (lead.model !== newLead.model) {
+    changes.push({ field: 'Model', from: lead.model || '', to: newLead.model });
+    updatedFields.model = newLead.model;
+  }
+
+  if (lead.type !== newLead.type) {
+    changes.push({ field: 'Enquiry Type', from: lead.type || '', to: newLead.type });
+    updatedFields.type = newLead.type;
+  }
+
+  if (lead.followup !== newLead.followup) {
+    changes.push({ field: 'Follow-up Date', from: lead.followup || '', to: newLead.followup });
+    updatedFields.followup = newLead.followup;
+  }
+
+  if (lead.notes !== newLead.notes) {
+    changes.push({ field: 'Notes', from: lead.notes || '', to: newLead.notes });
+    updatedFields.notes = newLead.notes;
+  }
+
+  if (changes.length === 0) {
+    // No actual changes
+    document.getElementById('enquiryModal').classList.remove('active');
+    return;
+  }
+
+  // 📜 Build history log
+  const now = new Date().toLocaleDateString('en-GB');
+  const prevHistory = lead.followup_history ? JSON.parse(lead.followup_history) : [];
+
+  changes.forEach(change => {
+    prevHistory.push({
+      date: now,
+      status: `${change.field} Changed`,
+      note: `${change.field} changed from "${change.from}" to "${change.to}"`
     });
+  });
+
+  updatedFields.followup_history = JSON.stringify(prevHistory);
+
+  await updateLead(phone, updatedFields);
+  Object.assign(lead, updatedFields); // update local copy
+}
+else {
+         // Add creation history
+            const historyEntry = {
+            date: new Date().toLocaleDateString('en-GB'),
+            status: 'Created',
+            note: `New enquiry created with name "${newLead.name}"`
+            };
+            newLead.followup_history = JSON.stringify([historyEntry]);
+
+            await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: newLead })
+            });
+
+        }
+
     enquiryForm.reset();
     document.getElementById('enquiryModal').classList.remove('active');
     submitMsg.style.display = 'block';
     setTimeout(() => { submitMsg.style.display = 'none'; }, 4000);
     loadLeads(); 
+    document.getElementById('editMode').value = 'false';
+    document.getElementById('mobile').disabled = false;
   } catch (err) {
     alert('❌ Failed to save enquiry. Please try again.');
     console.error(err);
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit Enquiry';
+    document.getElementById('editMode').value = 'false';
+    document.getElementById('mobile').disabled = false;
   }
 });
 
@@ -299,6 +464,7 @@ function renderTable() {
   const todayStr = new Date().toLocaleDateString('en-GB');
 
   const filtered = leads.filter(l => {
+    if (l.status === 'deleted') return false; 
     const [d, m, y] = l.date.split('/');
     const lDate = new Date(y, m - 1, d);
     if (viewingToday && l.followup !== todayStr) return false;
@@ -319,71 +485,229 @@ function renderTable() {
   }
   emptyMsg.style.display = 'none';
 
-  paginated.forEach(lead => {
-    const tr = document.createElement('tr');
+paginated.forEach(lead => {
+  const tr = document.createElement('tr');
+  
+    // ✅ DESKTOP ROW: show full table
     tr.innerHTML = `
-      ${td('Date', lead.date)}
+      ${td('Date', `<input type="text" class="editable-date" data-type="date" data-ph="${lead.phone}" value="${lead.date}" readonly />`)}
       ${td('Name', lead.name)}
       ${td('Phone', lead.phone)}
       ${td('Email', lead.email || '-')}
       ${td('Model', lead.model)}
       ${td('Enquiry Type', lead.type)}
-      ${td('Next Follow-up', lead.followup || '-')}
-      ${td('Notes', lead.notes || '-')}
+      ${td('Next Follow-up', `<input type="text" class="editable-date" data-type="followup" data-ph="${lead.phone}" value="${lead.followup || ''}" readonly />`)}
+      ${td('Notes', (lead.notes && lead.notes.length > 10) 
+  ? `${lead.notes.substring(0, 10)}... <a href="#" class="view-note" data-ph="${lead.phone}">View</a>`
+  : (lead.notes || '-'))}
       ${td('Status', `<span class="status ${lead.status}">${lead.status}</span>`)}
       ${td('Actions', `
-        <select class="action-select" data-ph="${lead.phone}">
-          <option value="">--Action--</option>
-          <option value="closed">Closed</option>
-          <option value="postponed">Postponed</option>
-          <option value="purchased">Purchased elsewhere</option>
-        </select><br />
-        <input type="date" class="postpone-date" style="display:none" />
-        <button class="action-btn view-btn" data-ph="${lead.phone}">View</button>
+        <div class="action-cell">
+          <select class="action-select" data-ph="${lead.phone}">
+          
+            <option value="">--Action--</option>
+            <option value="edit" >✏️ Edit</option>
+            <option value="delete">🗑️ Delete</option>
+            <option value="history">📜 Log History</option>
+            <option value="closed">Closed</option>
+            <option value="postponed">Postponed</option>
+            <option value="purchased">Purchased elsewhere</option>
+          </select>
+          <input type="date" class="postpone-date" style="display:none" />
+              <button class="action-btn edit-btn" data-ph="${lead.phone}" style="display:none">✏️</button>
+          <button class="action-btn delete-btn" data-ph="${lead.phone}" style="display:none">🗑️</button>
+        </div>
       `)}
     `;
-    leadBody.appendChild(tr);
-  });
-
-   renderPaginationControls(filtered.length);
   
-}
-leadBody.addEventListener('change', async e => {
-  const sel = e.target.closest('select.action-select');
-  if(sel){
-    const action = sel.value;
-    const row = sel.closest('tr');
-    const dateInput = row.querySelector('.postpone-date');
-    const phone = sel.dataset.ph;
-    const lead = leads.find(l=>l.phone===phone);
-    if(!lead) return;
-    if(action==='postponed'){
-      dateInput.style.display='inline-block';
-      dateInput.value='';
-      dateInput.focus();
-    }else if(action){
-      askNote(`Add note for ${action}`, async note => {
-        await updateLead(phone, {status: action, notes: note});
-        lead.status = action; lead.notes = note;
-        renderTable();
-      });
+    // row.classList.add('table-row-animate');
+  leadBody.appendChild(tr);
+});
+
+flatpickr('.editable-date', {
+  dateFormat: 'd/m/Y',
+  allowInput: true,
+  disableMobile: true,
+  onChange: async function(selectedDates, dateStr, instance) {
+    const phone = instance.input.dataset.ph;
+    const type = instance.input.dataset.type;
+    const lead = leads.find(l => l.phone === phone);
+    const prevValue = type === 'date' ? lead.date : lead.followup;
+const label = type === 'date' ? 'Date' : 'Follow-up';
+
+const noteText = `${label} changed from ${prevValue || 'N/A'} to ${dateStr}`;
+    if (!lead || !dateStr) return;
+
+    // Update the local field
+    if (type === 'date') {
+      lead.date = dateStr;
+    } else {
+      lead.followup = dateStr;
     }
-    return;
-  }
-  const input = e.target.closest('input.postpone-date');
-  if(input){
-    const iso = input.value;
-    if(!iso) return;
-    const formatted = new Date(iso).toLocaleDateString('en-GB');
-    const row = input.closest('tr');
-    const phone = row.querySelector('select.action-select').dataset.ph;
-    const lead = leads.find(l=>l.phone===phone);
-    askNote('Add note for postponed', async note => {
-      await updateLead(phone, {status: 'postponed', followup: formatted, notes: note});
-      if(lead){ lead.status='postponed'; lead.followup=formatted; lead.notes=note; }
-      renderTable();
+
+    // 🟢 Append to history
+const historyEntry = {
+  date: new Date().toLocaleDateString('en-GB'),
+  status: `${label} Updated`,
+  note: noteText
+};
+    const prev = lead.followup_history ? JSON.parse(lead.followup_history) : [];
+    const updatedHistory = [...prev, historyEntry];
+    lead.followup_history = JSON.stringify(updatedHistory);
+
+    // ✅ Update in Sheet
+    await updateLead(phone, {
+      [type]: dateStr,
+      followup_history: JSON.stringify(updatedHistory)
     });
   }
+});
+
+
+
+   renderPaginationControls(filtered.length);
+   document.getElementById('tableLoader').style.display = 'none';
+
+  
+}
+
+
+
+leadBody.addEventListener('change', async e => {
+  const sel = e.target.closest('select.action-select');
+if (sel) {
+  const action = sel.value;
+  const row = sel.closest('tr');
+  const dateInput = row.querySelector('.postpone-date');
+  const phone = sel.dataset.ph;
+  const lead = leads.find(l => l.phone === phone);
+  if (!lead) return;
+
+  const now = new Date().toLocaleDateString('en-GB');
+
+if (action === 'edit') {
+  document.querySelector(`button.edit-btn[data-ph="${phone}"]`)?.click();
+  sel.value = "";
+  return;
+}
+
+  if (action === 'delete') {
+    document.querySelector(`button.delete-btn[data-ph="${phone}"]`)?.click();
+
+    // 🟢 Log Delete action
+    const entry = { date: now, status: 'delete', note: 'Delete initiated' };
+    const prev = lead.followup_history ? JSON.parse(lead.followup_history) : [];
+    const updated = [...prev, entry];
+    lead.followup_history = JSON.stringify(updated);
+    await updateLead(phone, { followup_history: JSON.stringify(updated) });
+
+    sel.value = "";
+    return;
+  }
+
+  if (action === 'view') {
+    document.querySelector(`button.view-btn[data-ph="${phone}"]`)?.click();
+
+    // 🟢 Log View action (optional)
+    const entry = { date: now, status: 'view', note: 'Viewed lead details' };
+    const prev = lead.followup_history ? JSON.parse(lead.followup_history) : [];
+    const updated = [...prev, entry];
+    lead.followup_history = JSON.stringify(updated);
+    await updateLead(phone, { followup_history: JSON.stringify(updated) });
+
+    sel.value = "";
+    return;
+  }
+
+  if (action === 'postponed') {
+    dateInput.style.display = 'inline-block';
+    dateInput.value = '';
+    dateInput.focus();
+    return;
+  }
+
+  if (action === 'history') {
+    const historyData = lead.followup_history ? JSON.parse(lead.followup_history) : [];
+    const html = historyData.length
+      ? historyData.map(h => `
+          <div style="margin-bottom: 0.75rem; padding: 0.6rem; border-bottom: 1px solid #444;">
+            <strong>Date:</strong> ${h.date} <br/>
+            <strong>Action:</strong> ${h.status} <br/>
+            <strong>Note:</strong> ${h.note}
+          </div>
+        `).join('')
+      : '<p style="color: gray;">No history found.</p>';
+
+    document.getElementById('historyContent').innerHTML = html;
+    document.getElementById('historyModal').classList.add('active');
+    sel.value = "";
+    return;
+  }
+
+  // ✅ For other status updates like closed, purchased, etc.
+  askNote(`Add note for ${action}`, async note => {
+    const entry = { date: now, status: action, note: note };
+    const prev = lead.followup_history ? JSON.parse(lead.followup_history) : [];
+    const updated = [...prev, entry];
+
+    await updateLead(phone, {
+      status: action,
+      notes: note,
+      followup_history: JSON.stringify(updated)
+    });
+
+    lead.status = action;
+    lead.notes = note;
+    lead.followup_history = JSON.stringify(updated);
+    renderTable();
+  });
+
+  return;
+}
+const input = e.target.closest('input.postpone-date');
+if (input) {
+  const iso = input.value;
+  if (!iso) return;
+
+  const formatted = new Date(iso).toLocaleDateString('en-GB');
+  const row = input.closest('tr');
+  const phone = row.querySelector('select.action-select').dataset.ph;
+  const lead = leads.find(l => l.phone === phone);
+  if (!lead) return;
+
+  const oldDate = lead.followup || 'N/A';
+
+  askNote('Add note for Postponed', async note => {
+    const now = new Date().toLocaleDateString('en-GB');
+
+        const historyEntry = {
+        date: now,
+        status: `Postponed - Follow-up changed from ${oldDate} to ${formatted}`,
+        note: note
+        };
+
+
+    const prev = lead.followup_history ? JSON.parse(lead.followup_history) : [];
+    const updated = [...prev, historyEntry];
+
+    await updateLead(phone, {
+      status: 'postponed',
+      followup: formatted,
+      notes: note,
+      followup_history: JSON.stringify(updated)
+    });
+
+    // Update local
+    lead.status = 'postponed';
+    lead.followup = formatted;
+    lead.notes = note;
+    lead.followup_history = JSON.stringify(updated);
+
+    renderTable();
+  });
+}
+
+
 });
  window.renderTable = renderTable;
     /* === View button === */
@@ -406,5 +730,94 @@ leadBody.addEventListener('change', async e => {
 
       viewModal.classList.add('active');
     });
+
+    // 📌 Handle '... View' link in Notes column
+leadBody.addEventListener('click', e => {
+  const link = e.target.closest('.view-note');
+  if (!link) return;
+
+  e.preventDefault();
+  const phone = link.dataset.ph;
+  const lead = leads.find(l => l.phone === phone);
+  if (!lead || !lead.notes) return;
+
+  viewBody.innerHTML = `
+    <dt>Full Note</dt>
+    <dd style="white-space: pre-wrap;">${lead.notes}</dd>
+  `;
+  viewModal.classList.add('active');
+});
+
+
+    /* === Edit button === */
+leadBody.addEventListener('click', e => {
+  const btn = e.target.closest('button.edit-btn');
+  if (!btn) return;
+  const phone = btn.dataset.ph;
+  const lead = leads.find(l => l.phone === phone);
+  if (!lead) return;
+
+  // Fill the modal form fields with current lead data
+  document.getElementById('fullName').value = lead.name;
+  document.getElementById('mobile').value = lead.phone;
+  document.getElementById('email').value = lead.email || '';
+  document.getElementById('model').value = lead.model;
+  document.getElementById('enquiryType').value = lead.type;
+  document.getElementById('followDate').value = lead.followup || '';
+  document.getElementById('notes').value = lead.notes || '';
+
+  // Make phone number read-only
+  document.getElementById('mobile').disabled = true;
+
+  // Set edit mode flag
+  document.getElementById('editMode').value = 'true';
+  document.getElementById('leadStatus').value = lead.status || 'new';
+
+  // Open the modal
+  enquiryModal.classList.add('active');
+});
+
+leadBody.addEventListener('click', e => {
+  const btn = e.target.closest('button.delete-btn');
+  if (!btn) return;
+  pendingDeletePhone = btn.dataset.ph;
+  document.getElementById('confirmDelete').style.display = 'block';
+});
+
+async function confirmDeleteYes() {
+  document.getElementById('confirmDelete').style.display = 'none';
+  if (!pendingDeletePhone) return;
+
+  await updateLead(pendingDeletePhone, { status: 'deleted' });  // Soft delete
+  leads = leads.map(lead => {
+    if (lead.phone === pendingDeletePhone) {
+      return {...lead, status: 'deleted'};
+    }
+    return lead;
+  });
+
+
+  renderTable();
+
+  // ✅ Show confirmation message
+  const deleteMsg = document.getElementById('deleteMessage');
+  deleteMsg.style.display = 'block';
+  setTimeout(() => {
+    deleteMsg.style.display = 'none';
+  }, 3000); // Hide after 3 seconds
+
+  pendingDeletePhone = null;
+}
+
+  function confirmDeleteNo() {
+  document.getElementById('confirmDelete').style.display = 'none';
+  pendingDeletePhone = null;
+}
+
+  document.getElementById('confirmYesBtn').addEventListener('click', confirmDeleteYes);
+  document.getElementById('confirmNoBtn').addEventListener('click', confirmDeleteNo);
+
+
+
   }
 
