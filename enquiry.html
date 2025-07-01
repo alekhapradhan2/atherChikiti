@@ -1,157 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ather Chikiti • Customer Enquiry Portal</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-  <link rel="stylesheet" href="enqstyle.css" />
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/9131/9131529.png" />
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-</head>
-<body>
-<div id="loader">
-  <div class="loader-icon">⚡</div>
-  <p>Loading Portal...</p>
-</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ather Chikiti • Customer Enquiry Portal</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <link rel="stylesheet" href="enqstyle.css" />
+    <link
+      rel="icon"
+      href="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+    />
 
-  <!-- Note Modal -->
-  <div id="noteModal" class="note-input-popup" style="display:none">
-    <h3 id="noteModalTitle">Add Note</h3>
-    <textarea id="noteModalTextarea" placeholder="Enter note..."></textarea>
-    <div style="text-align:right">
-      <button onclick="submitNote()">Save</button>
-      <button onclick="cancelNote()">Cancel</button>
-    </div>
-  </div>
-
-  <!-- OTP Gate -->
-<!-- Staff Verification Page -->
-<div id="otpGate">
-  <header style="width: 100%; background: linear-gradient(145deg, #00361f, #005f2e); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);">
-    <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png" alt="Ather Logo" style="width: 40px; height: 40px; border-radius: 50%;" />
-    <h1 style="font-size: 1.5rem; font-weight: 600; color: #e6edf3;">Ather Chikiti</h1>
-  </header>
-
-  <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; box-shadow: 0 0 15px rgba(0,0,0,0.6); text-align: center; max-width: 360px; width: 90%; margin-top: 2rem;">
-    <h2 style="margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--accent);">Staff Verification</h2>
-    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem;">Enter the password to access enquiries</p>
-
-    <div style="position:relative; display:inline-block; width:100%;">
-      <input type="password" id="otpInput" maxlength="20" autocomplete="current-password" style="width:100%; font-size:1rem; padding:0.65rem 2.5rem 0.65rem 0.8rem; border-radius: 0.5rem;" />
-      <span id="togglePassword" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem; color:#aaa;">👁️</span>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  </head>
+  <body>
+    <div id="loader">
+      <div class="loader-icon">⚡</div>
+      <p>Loading Portal...</p>
     </div>
 
-    <button class="btn" id="otpBtn" style="margin-top: 1rem; width: 100%;">Verify</button>
-    <p id="otpErr" style="display:none; color: #ff4f4f; font-size: 0.85rem; margin-top: 0.8rem;">Incorrect code, try again.</p>
+    <!-- Note Modal -->
+    <div id="noteModal" class="note-input-popup" style="display: none">
+      <h3 id="noteModalTitle">Add Note</h3>
+      <textarea id="noteModalTextarea" placeholder="Enter note..." maxlength="150"></textarea>
+      <div style="text-align: right">
+        <button onclick="submitNote()">Save</button>
+        <button onclick="cancelNote()">Cancel</button>
+      </div>
+    </div>
+
+    <div id="noteViewerModal" class="modal">
+  <div class="modal-content">
+    <span id="closeNoteViewer">&times;</span>
+    <p id="fullNoteContent"></p>
   </div>
 </div>
 
+    <!-- OTP Gate -->
+    <!-- Staff Verification Page -->
+    <div id="otpGate">
+      <header
+        style="
+          width: 100%;
+          background: linear-gradient(145deg, #00361f, #005f2e);
+          padding: 1rem 2rem;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        "
+      >
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+          alt="Ather Logo"
+          style="width: 40px; height: 40px; border-radius: 50%"
+        />
+        <h1 style="font-size: 1.5rem; font-weight: 600; color: #e6edf3">
+          Ather Chikiti
+        </h1>
+      </header>
 
-  <!-- Main App -->
-  <div id="mainApp" style="display:none">
-        <header>
-          <h1>Customer Enquiry Portal</h1>
-          <div class="header-buttons">
-            <button class="btn" id="createBtn">Create Enquiry</button>
-            <button class="btn-outline" id="followBtn" title="Show today's follow‑ups">Today's Follow‑ups</button>
+      <div
+        style="
+          background: var(--surface);
+          padding: 2rem;
+          border-radius: 1rem;
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+          text-align: center;
+          max-width: 360px;
+          width: 90%;
+          margin-top: 2rem;
+        "
+      >
+        <h2
+          style="margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--accent)"
+        >
+          Staff Verification
+        </h2>
+        <p
+          style="
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+          "
+        >
+          Enter the password to access enquiries
+        </p>
 
-            <!-- Profile Button -->
-              <div class="profile-wrapper">
-                <button id="profileToggle" class="profile-icon-btn" title="Profile">⚡</button>
-                <div id="profileDropdown" class="profile-dropdown">
-                  <button id="logoutBtn">🔓 Logout</button>
-                </div>
-              </div>
+        <div style="position: relative; display: inline-block; width: 100%">
+          <input
+            type="password"
+            id="otpInput"
+            maxlength="20"
+            autocomplete="current-password"
+            style="
+              width: 100%;
+              font-size: 1rem;
+              padding: 0.65rem 2.5rem 0.65rem 0.8rem;
+              border-radius: 0.5rem;
+            "
+          />
+          <span
+            id="togglePassword"
+            style="
+              position: absolute;
+              right: 12px;
+              top: 50%;
+              transform: translateY(-50%);
+              cursor: pointer;
+              font-size: 1.2rem;
+              color: #aaa;
+            "
+            >👁️</span
+          >
+        </div>
+
+        <button class="btn" id="otpBtn" style="margin-top: 1rem; width: 100%">
+          Verify
+        </button>
+        <p
+          id="otpErr"
+          style="
+            display: none;
+            color: #ff4f4f;
+            font-size: 0.85rem;
+            margin-top: 0.8rem;
+          "
+        >
+          Incorrect code, try again.
+        </p>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" style="display: none">
+      <header>
+        <h1>Customer Enquiry Portal</h1>
+        <div class="header-buttons">
+          <button class="btn" id="createBtn">Create Enquiry</button>
+          <button
+            class="btn-outline"
+            id="followBtn"
+            title="Show today's follow‑ups"
+          >
+            Today's Follow‑ups
+          </button>
+
+          <!-- Profile Button -->
+          <div class="profile-wrapper">
+            <button id="profileToggle" class="profile-icon-btn" title="Profile">
+              ⚡
+            </button>
+            <div id="profileDropdown" class="profile-dropdown">
+              <button id="logoutBtn">🔓 Logout</button>
+            </div>
           </div>
-        </header>
-
-
-    <main>
-      <section id="followSection">
-        <div class="filters">
-          <input type="text" id="searchInput" placeholder="Search name, phone, email" />
-          <input type="date" placeholder="From Date" id="startDate" />
-          <input type="date" placeholder="To Date" id="endDate" />
-          <label for="recordsPerPage" style="margin-left:auto;">
-            Records per page:
-            <select id="recordsPerPage">
-              <option value="5">5</option>
-              <option value="10" selected>10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-            </select>
-          </label>
         </div>
+      </header>
 
-        <div style="overflow-x:auto;">
-          <table id="leadTable">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Model</th>
-                <th>Enquiry Type</th>
-                <th>Next Follow-up</th>
-                <th>Notes</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <p class="empty" id="emptyMsg" style="display:none">No enquiries found.</p>
-        <div id="paginationControls"></div>
-      </section>
-    </main>
+      <main>
+        <section id="followSection">
+          <div class="filters">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search name, phone, email"
+            />
+            <input type="date" placeholder="From Date" id="startDate" />
+            <input type="date" placeholder="To Date" id="endDate" />
+            <label for="recordsPerPage" style="margin-left: auto">
+              Records per page:
+              <select id="recordsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </label>
+          </div>
 
-    <!-- Enquiry Modal -->
-    <div class="modal" id="enquiryModal">
-      <div class="modal-content">
-        <button class="close" id="closeModal">×</button>
-        <h2>Create New Enquiry</h2>
-        <form id="enquiryForm">
-          <label>Full Name*<input type="text" id="fullName" required /></label>
-          <label>Mobile Number*<input type="tel" id="mobile" pattern="[0-9]{10}" required /></label>
-          <label>Email ID<input type="email" id="email" /></label>
-          <label>Vehicle Model Interested In
-            <select id="model">
-              <option value="450X">450X</option>
-              <option value="450 Apex">450 Apex</option>
-              <option value="S1X">S1X</option>
-            </select>
-          </label>
-          <label>Next Follow‑up Date<input type="date" id="followDate" required /></label>
-          <label>Enquiry Type
-            <select id="enquiryType">
-              <option>Walk‑in</option>
-              <option>Phone Call</option>
-              <option>Online</option>
-              <option>Social Media</option>
-            </select>
-          </label>
-          <label style="grid-column:1/-1">Notes<textarea id="notes" rows="3" placeholder="Additional details…"></textarea></label>
-          <button class="btn" style="grid-column:1/-1" type="submit">Submit Enquiry</button>
-        </form>
-      </div>
-    </div>
-
-    <div id="submitMessage">✅ Enquiry submitted successfully!</div>
-
-    <!-- View Modal -->
-    <div class="modal" id="viewModal">
-      <div class="modal-content">
-        <button class="close" id="closeView">×</button>
-        <h2>Lead Details</h2>
-        <dl id="viewBody"></dl>
-      </div>
-    </div>
+          <div style="overflow-x: auto; width: 100%;">
+            <table id="leadTable">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Model</th>
+                  <th>Enquiry Type</th>
+                  <th>Next Follow-up</th>
+                  <th>Notes</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="empty" id="emptyMsg" style="display: none">
+            No enquiries found.
+          </p>
+          <div id="paginationControls"></div>
+        </section>
+      </main>
+<div class="modal" id="historyModal">
+  <div class="modal-content">
+    <button class="close" onclick="document.getElementById('historyModal').classList.remove('active')">×</button>
+    <h2>Enquiry Log History</h2>
+    <div id="historyContent" style="max-height: 300px; overflow-y: auto;"></div>
   </div>
+</div>
 
-  <script src="enqlogic.js"></script>
-</body>
+      <!-- Enquiry Modal -->
+      <div class="modal" id="enquiryModal">
+        <div class="modal-content">
+          <button class="close" id="closeModal">×</button>
+          <h2>Create New Enquiry</h2>
+          <form id="enquiryForm">
+            <label
+              >Full Name*<input type="text" id="fullName" required
+            /></label>
+            <label
+              >Mobile Number*<input
+                type="tel"
+                id="mobile"
+                pattern="[0-9]{10}"
+                required
+            /></label>
+            <label>Email ID<input type="email" id="email" /></label>
+            <input type="hidden" id="leadStatus" value="new" />
+            <label
+              >Vehicle Model Interested In
+              <select id="model">
+                <option value="450X">450X</option>
+                <option value="450 Apex">450 Apex</option>
+                <option value="S1X">S1X</option>
+              </select>
+            </label>
+            <label
+              >Next Follow‑up Date<input type="date" id="followDate" required
+            /></label>
+            <label
+              >Enquiry Type
+              <select id="enquiryType">
+                <option>Walk‑in</option>
+                <option>Phone Call</option>
+                <option>Online</option>
+                <option>Social Media</option>
+              </select>
+            </label>
+            <label style="grid-column: 1/-1"
+              >Notes<textarea
+                id="notes"
+                rows="3"
+                placeholder="Additional details…"
+              ></textarea>
+            </label>
+            <button class="btn" style="grid-column: 1/-1" type="submit">
+              Submit Enquiry
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div id="submitMessage">✅ Enquiry submitted successfully!</div>
+
+      <!-- Delete Confirmation Modal -->
+      <div id="confirmDelete" class="note-input-popup" style="display: none">
+        <h3>Are you sure you want to delete this enquiry?</h3>
+        <div style="text-align: right; margin-top: 1rem">
+          <button id="confirmYesBtn" class="btn">Yes</button>
+          <button id="confirmNoBtn" class="btn-outline">No</button>
+        </div>
+      </div>
+      <div
+        id="deleteMessage"
+        style="display: none; color: green; text-align: center; margin: 1rem 0"
+      >
+        ✅ Enquiry deleted successfully.
+      </div>
+        <div id="tableLoader" style="display: none; text-align: center; padding: 2rem; font-size: 1.2rem; color: #888;">
+  <span class="spinner" style="margin-right: 8px;">⏳</span> Loading data...
+</div>
+
+      <!-- View Modal -->
+      <div class="modal" id="viewModal">
+        <div class="modal-content">
+          <button class="close" id="closeView">×</button>
+          <h2>Lead Details</h2>
+          <dl id="viewBody"></dl>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="editMode" value="false" />
+    <script src="enqlogic.js"></script>
+    <script>
+      function toggleDialog() {
+    const dialog = document.getElementById("actionDialog");
+    const overlay = document.getElementById("overlay");
+
+    const isVisible = dialog.style.display === "block";
+
+    dialog.style.display = isVisible ? "none" : "block";
+    overlay.style.display = isVisible ? "none" : "block";
+  }
+
+  function closeDialog() {
+    document.getElementById("actionDialog").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+  }
+
+  // Close if clicking outside (not using relative parent anymore)
+  document.addEventListener("click", function (event) {
+    const dialog = document.getElementById("actionDialog");
+    const menuBtn = document.querySelector(".menu-btn");
+    const overlay = document.getElementById("overlay");
+
+    if (!dialog.contains(event.target) && !menuBtn.contains(event.target)) {
+      dialog.style.display = "none";
+      overlay.style.display = "none";
+    }
+  });
+    </script>
+  </body>
 </html>
