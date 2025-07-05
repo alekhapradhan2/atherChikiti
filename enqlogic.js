@@ -56,6 +56,17 @@ window.addEventListener('popstate', () => {
   }
 });
 
+function parseDMY(dateStr) {
+  if (!dateStr || !dateStr.includes('/')) return null;
+  const [dd, mm, yyyy] = dateStr.trim().split('/');
+  const d = parseInt(dd, 10);
+  const m = parseInt(mm, 10) - 1;
+  const y = parseInt(yyyy, 10);
+  const date = new Date(y, m, d);
+  return isNaN(date.getTime()) ? null : date;
+}
+
+
 function showApp() {
   gate.style.display = 'none';
   mainApp.style.display = 'block';
@@ -244,12 +255,42 @@ document.querySelector('#enquiryModal h2').textContent = 'Edit Enquiry';
 closeModal.addEventListener('click',()=>{ enquiryModal.classList.remove('active'); });
     closeView.addEventListener('click',()=>{ viewModal.classList.remove('active'); });
     window.addEventListener('keydown',e=>{ if(e.key==='Escape'){ enquiryModal.classList.remove('active'); viewModal.classList.remove('active'); }});
-    [searchInput,startDate,endDate].forEach(el=>el.addEventListener('input',renderTable));
-    followBtn.addEventListener('click',()=>{
-      viewingToday = !viewingToday;
-      followBtn.textContent = viewingToday ? 'Show All' : "Today's Follow‑ups";
-      renderTable();
-    });
+    [searchInput, startDate, endDate].forEach(el => el.addEventListener('input', () => {
+  currentPage = 1;
+  renderTable();
+}));
+document.getElementById('statusFilter').addEventListener('change', () => {
+  currentPage = 1;
+  renderTable();
+});
+
+document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+  searchInput.value = '';
+  startDate.value = '';
+  endDate.value = '';
+  document.getElementById('statusFilter').value = '';
+  currentPage = 1;
+  renderTable();
+});
+
+
+    document.getElementById('statusFilter').addEventListener('change', renderTable);
+
+document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+  searchInput.value = '';
+  startDate.value = '';
+  endDate.value = '';
+  document.getElementById('statusFilter').value = '';
+  renderTable();
+});
+
+followBtn.addEventListener('click', () => {
+  viewingToday = !viewingToday;
+  followBtn.textContent = viewingToday ? 'Show All' : "Today's Follow‑ups";
+  currentPage = 1; // ✅ Add this line
+  renderTable();
+});
+
 
     /* === CRUD helpers === */
 async function loadLeads() {
@@ -260,8 +301,8 @@ async function loadLeads() {
       {
         date: '26/06/2025',
         name: 'Test User',
-        phone: '9999999999',
-        email: 'test@example.com',
+        phone: '9999929999',
+        email: 'test1@example.com',
         model: 'Model X',
         type: 'Walk-in',
         followup: '28/06/2025',
@@ -271,7 +312,7 @@ async function loadLeads() {
       {
         date: '25/06/2025',
         name: 'Jane Doe',
-        phone: '8888888888',
+        phone: '8888848888',
         email: 'jane@example.com',
         model: 'Model Y',
         type: 'Online',
@@ -280,9 +321,89 @@ async function loadLeads() {
         notes: 'Follow-up later'
       },      {
         date: '26/06/2025',
-        name: 'Test User',
-        phone: '9999999999',
+        name: 'Test1 User',
+        phone: '9999949999',
         email: 'test@example.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '28/06/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      },      {
+        date: '01/07/2025',
+        name: 'Test Use 3',
+        phone: '9399949999',
+        email: 'tes3t@example.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '28/06/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      },      {
+        date: '02/07/2025',
+        name: 'Test Use 4',
+        phone: '9397949999',
+        email: 'tes32t@example.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '07/07/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      },      {
+        date: '02/07/2025',
+        name: 'Test Use 5',
+        phone: '9399049999',
+        email: 'tes3t@exeample.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '28/06/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      },      {
+        date: '04/07/2025',
+        name: 'Test Use 6',
+        phone: '9399949r99',
+        email: 'teds3t@example.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '15/07/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      },      {
+        date: '29/06/2025',
+        name: 'Test Use 7',
+        phone: '9399949991',
+        email: 'tes3t@efxample.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '28/06/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      },      {
+        date: '03/07/2025',
+        name: 'Test Use 8',
+        phone: '93999496999',
+        email: 'tes3t@examfple.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '08/07/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      },      {
+        date: '08/07/2025',
+        name: 'Test User 9',
+        phone: '9399955999',
+        email: 'tes3t@exdample.com',
+        model: 'Model X',
+        type: 'Walk-in',
+        followup: '28/06/2025',
+        status: 'new',
+        notes: 'This is a mock entry for local testing'
+      },      {
+        date: '06/07/2025',
+        name: 'Test Use10',
+        phone: '9399922999',
+        email: 'tes3t@examplde.com',
         model: 'Model X',
         type: 'Walk-in',
         followup: '28/06/2025',
@@ -342,17 +463,23 @@ enquiryForm.addEventListener('submit', async e => {
   submitBtn.textContent = 'Submitting...';
   submitMsg.style.display = 'none';
 
-  const newLead = {
-      date: new Date().toLocaleDateString('en-GB'),
-      name: document.getElementById('fullName').value.trim(),
-      phone: document.getElementById('mobile').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      model: document.getElementById('model').value,
-      type: document.getElementById('enquiryType').value,
-      followup: document.getElementById('followDate').value,
-      status: document.getElementById('leadStatus').value || 'new',  // ✅ keep original status
-      notes: document.getElementById('notes').value.trim()
-  };
+const now = new Date();
+const date = now.toLocaleDateString('en-GB');
+const time = now.toLocaleTimeString('en-GB'); // Add this
+
+const newLead = {
+  date: date,
+  time: time, // Save time too
+  name: document.getElementById('fullName').value.trim(),
+  phone: document.getElementById('mobile').value.trim(),
+  email: document.getElementById('email').value.trim(),
+  model: document.getElementById('model').value,
+  type: document.getElementById('enquiryType').value,
+  followup: document.getElementById('followDate').value,
+  status: document.getElementById('leadStatus').value || 'new',
+  notes: document.getElementById('notes').value.trim(),
+};
+
   try {
  if (document.getElementById('editMode').value === 'true') {
   const phone = newLead.phone;
@@ -458,22 +585,36 @@ else {
     /* === Render table === */
 function td(label,value){return `<td data-label="${label}">${value}</td>`;}
 function renderTable() {
+  const selectedStatus = document.getElementById('statusFilter').value;
   const term = searchInput.value.toLowerCase();
-  const s = startDate.value ? new Date(startDate.value) : null;
-  const e = endDate.value ? new Date(endDate.value) : null;
+  const s = startDate.value ? new Date(startDate.value.split('/').reverse().join('-')) : null;
+  const e = endDate.value ? new Date(endDate.value.split('/').reverse().join('-')) : null;
   const todayStr = new Date().toLocaleDateString('en-GB');
+
 
   const filtered = leads.filter(l => {
     if (l.status === 'deleted') return false; 
     const [d, m, y] = l.date.split('/');
-    const lDate = new Date(y, m - 1, d);
+    const lDate = new Date(`${y}-${m}-${d}`); 
     if (viewingToday && l.followup !== todayStr) return false;
+    const statusOk = !selectedStatus || l.status === selectedStatus;
     const dateOk = (!s || lDate >= s) && (!e || lDate <= e);
     const termOk = [l.name, l.phone, l.email || '', l.notes || ''].some(x =>
       x.toLowerCase().includes(term)
     );
-    return dateOk && termOk;
+    return dateOk && termOk && statusOk;
   });
+    // ✅ Add this sorting block here
+// ✅ Sort by followup date (newest first), skip invalid
+filtered.sort((a, b) => {
+  const dtA = new Date(`${a.date} ${a.time || '00:00:00'}`);
+  const dtB = new Date(`${b.date} ${b.time || '00:00:00'}`);
+  return dtB - dtA; // Newest first
+});
+
+
+
+
 
   const paginated = filtered.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage);
 
@@ -500,7 +641,7 @@ paginated.forEach(lead => {
       ${td('Notes', (lead.notes && lead.notes.length > 10) 
   ? `${lead.notes.substring(0, 10)}... <a href="#" class="view-note" data-ph="${lead.phone}">View</a>`
   : (lead.notes || '-'))}
-      ${td('Status', `<span class="status ${lead.status}">${lead.status}</span>`)}
+     ${td('Status', `<span class="status ${lead.status}">${lead.status}</span>`)}
       ${td('Actions', `
         <div class="action-cell">
           <select class="action-select" data-ph="${lead.phone}">
@@ -512,6 +653,7 @@ paginated.forEach(lead => {
             <option value="closed">Closed</option>
             <option value="postponed">Postponed</option>
             <option value="purchased">Purchased elsewhere</option>
+
           </select>
           <input type="date" class="postpone-date" style="display:none" />
               <button class="action-btn edit-btn" data-ph="${lead.phone}" style="display:none">✏️</button>
@@ -776,6 +918,89 @@ leadBody.addEventListener('click', e => {
   // Open the modal
   enquiryModal.classList.add('active');
 });
+
+// Handle status badge dropdown
+leadBody.addEventListener('click', e => {
+  const badge = e.target.closest('.current-status');
+  const option = e.target.closest('.status-option');
+
+  if (badge) {
+    const options = badge.nextElementSibling;
+    options.style.display = options.style.display === 'flex' ? 'none' : 'flex';
+    return;
+  }
+
+  if (option) {
+    const wrapper = option.closest('.status-wrapper');
+    const phone = wrapper.dataset.ph;
+    const lead = leads.find(l => l.phone === phone);
+    if (!lead) return;
+
+    const status = option.dataset.status;
+    wrapper.querySelector('.status-options').style.display = 'none';
+
+    if (status === 'postponed') {
+      const input = wrapper.querySelector('.inline-postpone-picker');
+      input.style.display = 'inline-block';
+      flatpickr(input, {
+        dateFormat: 'd/m/Y',
+        defaultDate: lead.followup || null,
+        onChange: (dates, dateStr) => {
+          if (!dateStr) return;
+          askNote('Add reason for postponement', async note => {
+            const now = new Date().toLocaleDateString('en-GB');
+            const historyEntry = {
+              date: now,
+              status: 'postponed',
+              note: `${note} (Follow-up: ${dateStr})`
+            };
+            const updated = [...(JSON.parse(lead.followup_history || '[]')), historyEntry];
+
+            await updateLead(phone, {
+              status: 'postponed',
+              followup: dateStr,
+              notes: note,
+              followup_history: JSON.stringify(updated)
+            });
+
+            Object.assign(lead, {
+              status: 'postponed',
+              followup: dateStr,
+              notes: note,
+              followup_history: JSON.stringify(updated)
+            });
+
+            renderTable();
+          });
+        }
+      });
+      return;
+    }
+
+    // Other statuses
+    askNote(`Add note for ${status}`, async note => {
+      const now = new Date().toLocaleDateString('en-GB');
+      const historyEntry = { date: now, status, note };
+      const updated = [...(JSON.parse(lead.followup_history || '[]')), historyEntry];
+
+      await updateLead(phone, {
+        status,
+        notes: note,
+        followup_history: JSON.stringify(updated)
+      });
+
+      Object.assign(lead, {
+        status,
+        notes: note,
+        followup_history: JSON.stringify(updated)
+      });
+
+      renderTable();
+    });
+  }
+});
+
+
 
 leadBody.addEventListener('click', e => {
   const btn = e.target.closest('button.delete-btn');
