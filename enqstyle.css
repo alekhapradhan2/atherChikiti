@@ -415,6 +415,36 @@ thead th {
   color: #ffffff;
   text-align: left;
 }
+.fixed-table-wrapper {
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #444;
+  -webkit-overflow-scrolling: touch;
+}
+#leadTable thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(145deg, #e54141, #0048cd); /* 🌈 use your desired gradient */
+}
+
+#leadTable thead th {
+  background: transparent; /* 👈 allow row gradient to show through */
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #222;
+}
+
+.table-scroll-wrapper {
+  -webkit-overflow-scrolling: touch;
+}
+
+
 thead th:first-child {
   border-top-left-radius: 12px;
 }
@@ -1049,3 +1079,38 @@ tbody td:hover {
   backdrop-filter: blur(3px);
   z-index: 999;
 }
+
+.site-footer {
+  margin-top: 2rem;
+  padding: 1rem 0;
+  color: #ccc;
+  text-align: center;
+  font-size: 0.85rem;
+  border-top: 1px solid #333;
+}
+
+.footer-content {
+  max-width: 100%;
+  padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .site-footer {
+    font-size: 0.75rem;
+  }
+}
+
+.site-footer a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+  color: var(--accent, #00e676); /* optional hover color */
+}
+
+
+
+
