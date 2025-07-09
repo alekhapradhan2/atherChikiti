@@ -165,35 +165,53 @@
       </header>
 
       <main>
-        <section id="followSection">
-          <div class="filters">
-            <input
-              type="text"
-              id="searchInput"
-              placeholder="Search name, phone, email"
-            />
-            <input type="date" placeholder="From Date" id="startDate" />
-            <input type="date" placeholder="To Date" id="endDate" />
-            <select id="statusFilter">
-  <option value="">All Status</option>
-  <option value="new">New</option>
-  <option value="postponed">Postponed</option>
-  <option value="closed">Closed</option>
-  <option value="purchased">Purchased</option>
+
+<div class="filters-bar">
+  <div class="filters">
+    <input type="text" id="searchInput" placeholder="Search name, phone, email" />
+    <input type="date" placeholder="From Date" id="startDate" />
+    <input type="date" placeholder="To Date" id="endDate" />
+
+    <select id="statusFilter">
+      <option value="">All Status</option>
+      <option value="new">New</option>
+      <option value="postponed">Postponed</option>
+      <option value="closed">Closed</option>
+      <option value="purchased">Purchased</option>
+    </select>
+
+    <select id="modelFilter">
+      <option value="">Models</option>
+      <option value="Ather Rizta">Ather Rizta</option>
+      <option value="Ather 450 Apex">Ather 450 Apex</option>
+      <option value="Ather 450 S">Ather 450 S</option>
+      <option value="Ather 450 X">Ather 450 X</option>
+    </select>
+
+    <select id="typeFilter">
+      <option value="">Enquiry Types</option>
+      <option value="Walk-in">Walk-in</option>
+      <option value="Phone Call">Phone Call</option>
+      <option value="Online">Online</option>
+      <option value="Social Media">Social Media</option>
+      <option value="Website">Website</option>
+    </select>
+        <select id="recordsPerPage">
+  <option disabled selected>Records per page</option>
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+  <option value="50">50</option>
 </select>
 
-<button id="resetFiltersBtn" class="btn-outline">Reset</button>
+    <button id="resetFiltersBtn" class="btn-icon" title="Reset Filters">
+  &#x21BB;
+</button>
 
-            <label for="recordsPerPage" style="margin-left: auto">
-              Records per page:
-              <select id="recordsPerPage">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-              </select>
-            </label>
-          </div>
+
+  </div>
+</div>
+
 
           <div class="filter-group">
 
@@ -349,7 +367,7 @@
 
     <footer class="site-footer">
   <div class="footer-content">
-    © 2025 <a href="https://atherchikiti.fwh.is/" target="blank"><strong>Ather Chikiti</strong></a>. | Developed By Alekh
+    © 2025 <a href="https://atherchikiti.fwh.is/" target="blank"><strong>Ather Chikiti</strong></a>  All rights reserved.| Developed By <strong>Alekh</strong>
   </div>
 </footer>
   </body>
