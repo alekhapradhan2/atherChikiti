@@ -264,11 +264,24 @@ document.getElementById('statusFilter').addEventListener('change', () => {
   renderTable();
 });
 
+document.getElementById('modelFilter').addEventListener('change', () => {
+  currentPage = 1;
+  renderTable();
+});
+
+document.getElementById('typeFilter').addEventListener('change', () => {
+  currentPage = 1;
+  renderTable();
+});
+
+
 document.getElementById('resetFiltersBtn').addEventListener('click', () => {
   searchInput.value = '';
   startDate.value = '';
   endDate.value = '';
   document.getElementById('statusFilter').value = '';
+  document.getElementById('modelFilter').value = '';
+  document.getElementById('typeFilter').value = '';
   currentPage = 1;
   renderTable();
 });
@@ -586,6 +599,9 @@ else {
 function td(label,value){return `<td data-label="${label}">${value}</td>`;}
 function renderTable() {
   const selectedStatus = document.getElementById('statusFilter').value;
+  const selectedModel = document.getElementById('modelFilter').value;
+  const selectedType = document.getElementById('typeFilter').value;
+
   const term = searchInput.value.toLowerCase();
   const s = startDate.value ? new Date(startDate.value.split('/').reverse().join('-')) : null;
   const e = endDate.value ? new Date(endDate.value.split('/').reverse().join('-')) : null;
@@ -602,7 +618,11 @@ function renderTable() {
     const termOk = [l.name, l.phone, l.email || '', l.notes || ''].some(x =>
       x.toLowerCase().includes(term)
     );
-    return dateOk && termOk && statusOk;
+    const modelOk = !selectedModel || l.model === selectedModel;
+    const typeOk = !selectedType || l.type === selectedType;
+
+    return dateOk && termOk && statusOk && modelOk && typeOk;
+
   });
     // ✅ Add this sorting block here
 // ✅ Sort by followup date (newest first), skip invalid
@@ -1045,4 +1065,10 @@ async function confirmDeleteYes() {
 
 
   }
+
+  function toggleMobileFilters() {
+  const panel = document.getElementById("mobileFilterPanel");
+  panel.classList.toggle("show");
+}
+
 
