@@ -20,6 +20,55 @@
   animation: spin 0.8s linear infinite;
 }
 
+.filters-container {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+.filters-row input,
+.filters-row select,
+.filters-row button {
+  flex: 1 1 160px;
+  max-width: 180px;
+}
+.btn-icon {
+  all: unset;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;  /* Add */
+  min-height: 36px; /* Add */
+  max-width: 36px;  /* Add */
+  max-height: 36px; /* Add */
+  border-radius: 50%;
+  border: 2px solid #00e676;
+  color: #00e676;
+  font-size: 18px;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+  flex: 0 0 auto !important; /* Add to prevent flex grow/shrink */
+}
+
+.btn-icon:hover {
+  background: #00e676;
+  color: #000;
+}
+
+.records-select {
+  max-width: 180px;
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -1110,6 +1159,193 @@ tbody td:hover {
   text-decoration: underline;
   color: var(--accent, #00e676); /* optional hover color */
 }
+
+/* 🌟 CRM-STYLE PROFESSIONAL TABLE 🌟 */
+.fixed-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #2a2f3a;
+  background: #10131a;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  max-height: 65vh;
+  margin-top: 1rem;
+}
+
+#leadTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.87rem;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  table-layout: auto;
+}
+
+/* 🧠 Table Header */
+#leadTable thead {
+  background: linear-gradient(90deg, #1a1f2d 0%, #2a3240 100%);
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+#leadTable thead th {
+  padding: 14px 18px;
+  font-weight: 600;
+  border-bottom: 1px solid #444;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* 📄 Table Rows */
+#leadTable tbody tr {
+  background-color: #181d29;
+  border-bottom: 1px solid #2e3440;
+  transition: background 0.2s ease-in-out;
+}
+
+#leadTable tbody tr:nth-child(even) {
+  background-color: #1b212f;
+}
+
+#leadTable tbody tr:hover {
+  background-color: #252d3c;
+}
+
+/* 📦 Table Cells */
+#leadTable tbody td {
+  padding: 12px 16px;
+  color: #e8eef7;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+/* 📅 Inline Editable Dates */
+input.editable-date {
+  background: #202736;
+  border: 1px solid #3a4a5a;
+  color: #e8f6ff;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* 📝 Notes */
+.view-note {
+  color: #34f0a4;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* 🔵 Status Pills */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: #1f2733;
+  border: 1px solid #333b48;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.status::before {
+  content: '●';
+  font-size: 0.8rem;
+}
+
+/* 🎨 Status Colors */
+.status.new {
+  background-color: rgba(0, 255, 170, 0.1);
+  color: #00ffc2;
+}
+.status.closed {
+  background-color: rgba(200, 200, 200, 0.1);
+  color: #aaa;
+}
+.status.postponed {
+  background-color: rgba(100, 180, 255, 0.1);
+  color: #4dabff;
+}
+.status.purchased {
+  background-color: rgba(255, 220, 100, 0.1);
+  color: #ffd700;
+}
+
+/* 🛠️ Action Section */
+.action-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.action-select {
+  background: #131921;
+  border: 1px solid #34f0a4;
+  color: #34f0a4;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  min-width: 120px;
+}
+
+.action-btn {
+  border: 1px solid #34f0a4;
+  background: transparent;
+  color: #34f0a4;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.action-btn:hover {
+  background: #34f0a4;
+  color: #000;
+}
+
+/* 📱 Mobile Enhancements */
+@media (max-width: 768px) {
+  #leadTable thead {
+    display: none;
+  }
+
+  #leadTable tbody td {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border-bottom: 1px solid #2f2f2f;
+  }
+
+  #leadTable tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: #aaa;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  #leadTable tbody tr {
+    margin-bottom: 1rem;
+    display: block;
+    background: #1a1f2d;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+}
+
 
 
 
