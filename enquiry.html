@@ -66,6 +66,19 @@
         </h1>
       </header>
 
+      <div id="loginChoice" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; padding-top: 5rem;">
+  <button class="btn" onclick="selectLogin('admin')">Admin Login</button>
+  <button class="btn-outline" onclick="selectLogin('staff')">Staff Login</button>
+</div>
+<div id="staffLogin" style="display: none; flex-direction: column; align-items: center;">
+  <h2>Staff Login</h2>
+  <input id="staffMobile" placeholder="Mobile Number" />
+  <input id="staffPassword" type="password" placeholder="Password" />
+  <button class="btn" onclick="verifyStaff()">Login</button>
+  <p id="staffLoginErr" style="color: red; display: none;">Invalid credentials or inactive.</p>
+</div>
+
+
       <div
         style="
           background: var(--surface);
@@ -81,7 +94,7 @@
         <h2
           style="margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--accent)"
         >
-          Staff Verification
+          Admin Verification
         </h2>
         <p
           style="
@@ -141,7 +154,35 @@
     <!-- Main App -->
     <div id="mainApp" style="display: none">
       <header>
-        <h1>Customer Enquiry Portal</h1>
+
+
+        <h1 id="headerTitle">Ather</h1>
+  <div class="modal" id="staffManager">
+  <div class="modal-content">
+    <button class="close" onclick="closeStaffManager()">×</button>
+    <h2>Staff Management</h2>
+
+    <div style="margin-bottom: 1rem;">
+      <button class="btn-outline" onclick="showStaffSection()">Manage Staffs</button>
+      <button class="btn-outline" onclick="showCreateSection()">Create Staff</button>
+    </div>
+
+    <div id="staffListSection">
+      <div id="staffList">Loading staff...</div>
+    </div>
+
+    <div id="staffCreateSection" style="display: none;">
+      <form onsubmit="createStaff(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <input placeholder="Full Name" id="newStaffName" required />
+        <input placeholder="Phone Number" id="newStaffPhone" required />
+        <input placeholder="Email" id="newStaffEmail" required />
+        <input placeholder="Password" id="newStaffPass" required />
+        <button class="btn" style="grid-column: 1 / -1;">Create</button>
+      </form>
+    </div>
+  </div>
+</div>
+
         <div class="header-buttons">
           <button class="btn" id="createBtn">Create Enquiry</button>
           <button
@@ -367,7 +408,7 @@
 
     <footer class="site-footer">
   <div class="footer-content">
-    © 2025 <a href="https://atherchikiti.fwh.is/" target="blank"><strong>Ather Chikiti</strong></a>  All rights reserved.| Developed By <strong>Alekh</strong>
+    © 2025 <a href="https://atherchikiti.fwh.is/" target="blank"><strong>Ather Chikiti</strong></a>. | Developed By Alekh
   </div>
 </footer>
   </body>
