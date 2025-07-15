@@ -1,6 +1,8 @@
 
 let pendingNote = null;
 let pendingDeletePhone = null;
+let USER_TYPE = sessionStorage.getItem('user_type') || ''; // ✅ Set early
+// const createdBy = userType === 'admin' ? 'Admin' : sessionStorage.getItem('staff_name') || 'Staff';
 const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
 
 function askNote(title, callback) {
@@ -66,13 +68,42 @@ function parseDMY(dateStr) {
   return isNaN(date.getTime()) ? null : date;
 }
 
+function getActionBy() {
+  const type = sessionStorage.getItem('user_type');
+  if (type === 'admin') return 'Admin';
+  const name = sessionStorage.getItem('staff_name');
+  return name ? `Staff: ${name}` : 'Unknown';
+}
+
+
 
 function showApp() {
+  USER_TYPE = sessionStorage.getItem('user_type');
   gate.style.display = 'none';
+  document.getElementById('staffLogin').style.display = 'none';
   mainApp.style.display = 'block';
-  history.pushState({}, ''); // prevent immediate back
-  initApp();
+
+  
+
+const headerTitle = document.getElementById('headerTitle');
+const profileToggleBtn = document.getElementById('profileToggle');
+
+if (USER_TYPE === 'admin') {
+  createManageStaffButton();
+  headerTitle.textContent = 'Ather Chikiti - Admin Portal';
+  // profileToggleBtn.textContent = 'Admin';
+} else {
+  const staffName = sessionStorage.getItem('staff_name') || 'Staff';
+  headerTitle.textContent = `${staffName} -Staff`;
+  // profileToggleBtn.textContent = staffName; // ✅ no .charAt(0)
 }
+
+
+  history.pushState({}, '');
+  initApp();
+  renderTable(); 
+}
+
 
 
 
@@ -196,10 +227,12 @@ gate.style.display = 'none';
 
 // ✅ Optimized function
 async function initAppOnce() {
-  if (sessionStorage.getItem('verified') === 'yes') {
-    loader.style.display = 'none';
-    showApp(); // Calls initApp() which calls loadLeads()
-  } else {
+if (sessionStorage.getItem('verified') === 'yes') {
+  USER_TYPE = sessionStorage.getItem('user_type'); // ✅ Restore USER_TYPE
+  loader.style.display = 'none';
+  showApp();
+}
+ else {
     await fetchPasscode(); // Only when needed
     loader.style.display = 'none';
     gate.style.display = 'flex';
@@ -213,11 +246,12 @@ initAppOnce();
 otpBtn.addEventListener('click', () => {
   if (otpInput.value.trim() === PASSCODE) {
     sessionStorage.setItem('verified', 'yes');
+    sessionStorage.setItem('user_type', 'admin');
+    USER_TYPE = 'admin';
     showApp();
-  } else {
-    otpErr.style.display = 'block';
   }
 });
+
 
   /* ---------- Main application ---------- */
   function initApp(){
@@ -548,11 +582,13 @@ const newLead = {
   const prevHistory = lead.followup_history ? JSON.parse(lead.followup_history) : [];
 
   changes.forEach(change => {
-    prevHistory.push({
-      date: now,
-      status: `${change.field} Changed`,
-      note: `${change.field} changed from "${change.from}" to "${change.to}"`
-    });
+prevHistory.push({
+  date: now,
+  status: `${change.field} Changed`,
+  note: `${change.field} changed from "${change.from}" to "${change.to}"`,
+  by: getActionBy()
+});
+
   });
 
   updatedFields.followup_history = JSON.stringify(prevHistory);
@@ -563,10 +599,11 @@ const newLead = {
 else {
          // Add creation history
             const historyEntry = {
-            date: new Date().toLocaleDateString('en-GB'),
-            status: 'Created',
-            note: `New enquiry created with name "${newLead.name}"`
-            };
+  date: new Date().toLocaleDateString('en-GB'),
+  status: 'Created',
+  note: `New enquiry created with name "${newLead.name}"`,
+  by: getActionBy()
+};
             newLead.followup_history = JSON.stringify([historyEntry]);
 
             await fetch(API_URL, {
@@ -662,24 +699,21 @@ paginated.forEach(lead => {
   ? `${lead.notes.substring(0, 10)}... <a href="#" class="view-note" data-ph="${lead.phone}">View</a>`
   : (lead.notes || '-'))}
      ${td('Status', `<span class="status ${lead.status}">${lead.status}</span>`)}
-      ${td('Actions', `
-        <div class="action-cell">
-          <select class="action-select" data-ph="${lead.phone}">
-          
-            <option value="">--Action--</option>
-            <option value="edit" >✏️ Edit</option>
-            <option value="delete">🗑️ Delete</option>
-            <option value="history">📜 Log History</option>
-            <option value="closed">Closed</option>
-            <option value="postponed">Postponed</option>
-            <option value="purchased">Purchased elsewhere</option>
+${td('Actions', `
+  <div class="action-cell">
+    <select class="action-select" data-ph="${lead.phone}">
+      <option value="">--Action--</option>
+      <option value="edit">✏️ Edit</option>
+      ${USER_TYPE === 'admin' ? '<option value="delete">🗑️ Delete</option>' : ''}
+      ${USER_TYPE === 'admin' ? '<option value="history">📜 Log History</option>' : ''}
+      <option value="closed">Closed</option>
+      <option value="postponed">Postponed</option>
+      <option value="purchased">Purchased elsewhere</option>
+    </select>
+    <input type="date" class="postpone-date" style="display:none; margin-top:5px;" />
+  </div>
+`)}
 
-          </select>
-          <input type="date" class="postpone-date" style="display:none" />
-              <button class="action-btn edit-btn" data-ph="${lead.phone}" style="display:none">✏️</button>
-          <button class="action-btn delete-btn" data-ph="${lead.phone}" style="display:none">🗑️</button>
-        </div>
-      `)}
     `;
   
     // row.classList.add('table-row-animate');
@@ -711,8 +745,10 @@ const noteText = `${label} changed from ${prevValue || 'N/A'} to ${dateStr}`;
 const historyEntry = {
   date: new Date().toLocaleDateString('en-GB'),
   status: `${label} Updated`,
-  note: noteText
+  note: noteText,
+  by: getActionBy()
 };
+
     const prev = lead.followup_history ? JSON.parse(lead.followup_history) : [];
     const updatedHistory = [...prev, historyEntry];
     lead.followup_history = JSON.stringify(updatedHistory);
@@ -748,16 +784,30 @@ if (sel) {
   const now = new Date().toLocaleDateString('en-GB');
 
 if (action === 'edit') {
-  document.querySelector(`button.edit-btn[data-ph="${phone}"]`)?.click();
+  // Find the lead data
+  document.getElementById('fullName').value = lead.name;
+  document.getElementById('mobile').value = lead.phone;
+  document.getElementById('email').value = lead.email || '';
+  document.getElementById('model').value = lead.model;
+  document.getElementById('enquiryType').value = lead.type;
+  document.getElementById('followDate').value = lead.followup || '';
+  document.getElementById('notes').value = lead.notes || '';
+  document.getElementById('editMode').value = 'true';
+  document.getElementById('leadStatus').value = lead.status || 'new';
+  document.getElementById('mobile').disabled = true;
+
+  document.getElementById('enquiryModal').classList.add('active');
   sel.value = "";
   return;
 }
 
   if (action === 'delete') {
-    document.querySelector(`button.delete-btn[data-ph="${phone}"]`)?.click();
+    dpendingDeletePhone = phone;
+document.getElementById('confirmDelete').style.display = 'block';
+
 
     // 🟢 Log Delete action
-    const entry = { date: now, status: 'delete', note: 'Delete initiated' };
+    const entry = { date: now, status: 'delete', note: 'Delete initiated', by: getActionBy() };
     const prev = lead.followup_history ? JSON.parse(lead.followup_history) : [];
     const updated = [...prev, entry];
     lead.followup_history = JSON.stringify(updated);
@@ -795,7 +845,9 @@ if (action === 'edit') {
           <div style="margin-bottom: 0.75rem; padding: 0.6rem; border-bottom: 1px solid #444;">
             <strong>Date:</strong> ${h.date} <br/>
             <strong>Action:</strong> ${h.status} <br/>
-            <strong>Note:</strong> ${h.note}
+            <strong>Note:</strong> ${h.note} <br/>
+            <strong>By:</strong> ${h.by || 'Unknown'}
+
           </div>
         `).join('')
       : '<p style="color: gray;">No history found.</p>';
@@ -808,7 +860,7 @@ if (action === 'edit') {
 
   // ✅ For other status updates like closed, purchased, etc.
   askNote(`Add note for ${action}`, async note => {
-    const entry = { date: now, status: action, note: note };
+    const entry = { date: now, status: action, note: note, by: getActionBy() };
     const prev = lead.followup_history ? JSON.parse(lead.followup_history) : [];
     const updated = [...prev, entry];
 
@@ -842,11 +894,13 @@ if (input) {
   askNote('Add note for Postponed', async note => {
     const now = new Date().toLocaleDateString('en-GB');
 
-        const historyEntry = {
-        date: now,
-        status: `Postponed - Follow-up changed from ${oldDate} to ${formatted}`,
-        note: note
-        };
+const historyEntry = {
+  date: now,
+  status: `Postponed - Follow-up changed from ${oldDate} to ${formatted}`,
+  note: note,
+  by: getActionBy()
+};
+
 
 
     const prev = lead.followup_history ? JSON.parse(lead.followup_history) : [];
@@ -969,11 +1023,13 @@ leadBody.addEventListener('click', e => {
           if (!dateStr) return;
           askNote('Add reason for postponement', async note => {
             const now = new Date().toLocaleDateString('en-GB');
-            const historyEntry = {
-              date: now,
-              status: 'postponed',
-              note: `${note} (Follow-up: ${dateStr})`
-            };
+const historyEntry = {
+  date: now,
+  status: 'postponed',
+  note: `${note} (Follow-up: ${dateStr})`,
+  by: getActionBy()
+};
+
             const updated = [...(JSON.parse(lead.followup_history || '[]')), historyEntry];
 
             await updateLead(phone, {
@@ -1000,7 +1056,8 @@ leadBody.addEventListener('click', e => {
     // Other statuses
     askNote(`Add note for ${status}`, async note => {
       const now = new Date().toLocaleDateString('en-GB');
-      const historyEntry = { date: now, status, note };
+      const historyEntry = { date: now, status, note, by: getActionBy() };
+
       const updated = [...(JSON.parse(lead.followup_history || '[]')), historyEntry];
 
       await updateLead(phone, {
@@ -1070,5 +1127,210 @@ async function confirmDeleteYes() {
   const panel = document.getElementById("mobileFilterPanel");
   panel.classList.toggle("show");
 }
+
+function selectLogin(type) {
+  const loginChoice = document.getElementById('loginChoice');
+  const staffLogin = document.getElementById('staffLogin');
+  const otpInput = document.getElementById('otpInput');
+  const otpGate = document.getElementById('otpGate');
+
+  loginChoice.style.display = 'none';
+
+  if (type === 'admin') {
+    otpGate.style.display = 'flex';
+    staffLogin.style.display = 'none';
+    otpInput.value = '';
+  } else if (type === 'staff') {
+    otpGate.style.display = 'flex';
+    staffLogin.style.display = 'flex';
+    otpInput.parentElement.style.display = 'none'; // 👈 Hide Admin OTP box
+    document.getElementById('otpBtn').style.display = 'none'; // 👈 Hide Verify button
+    document.getElementById('otpErr').style.display = 'none';
+  }
+}
+
+
+
+window.selectLogin = selectLogin;
+
+document.getElementById('adminOtpSection').style.display = 'none';
+
+function createManageStaffButton() {
+  const existing = document.getElementById('manageStaffBtn');
+  if (existing) return;
+
+  const btn = document.createElement('button');
+  btn.className = 'btn-outline';
+  btn.id = 'manageStaffBtn';
+  btn.textContent = 'Manage Staffs';
+btn.onclick = () => {
+  showStaffSection(); // ✅ shows list and loads staff
+  document.getElementById('staffManager').classList.add('active');
+};
+
+  const container = document.querySelector('.header-buttons');
+  if (container) container.insertBefore(btn, container.firstChild);
+}
+
+window.createManageStaffButton = createManageStaffButton;
+
+async function showStaffManager() {
+  const res = await fetch('https://sheetdb.io/api/v1/adq20iuv1a4x7');
+  const staffList = await res.json();
+
+  const html = staffList.map(user => {
+    const name = user["Full Name"]?.trim() || '(No Name)';
+    const email = user.Email?.trim() || '(No Email)';
+    const status = user.Status === 'Active';
+
+    return `
+      <div style="margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; background: #111; padding: 0.5rem 1rem; border-radius: 6px;">
+        <div>
+          <strong>${name}</strong><br />
+          <small>${email}</small>
+        </div>
+        <div class="toggle-container">
+          <label class="switch">
+            <input type="checkbox" onchange="toggleStaffStatus('${email}', this.checked)" ${status ? 'checked' : ''}>
+            <span class="slider"></span>
+          </label>
+          <span style="margin-left: 0.5rem; color: #fff;">${status ? 'Active' : 'Inactive'}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('staffList').innerHTML = html;
+  document.getElementById('staffManager').classList.add('active');
+}
+
+async function toggleStaffStatus(email, isActive) {
+  const newStatus = isActive ? 'Active' : 'Inactive';
+
+  try {
+    const res = await fetch(`https://sheetdb.io/api/v1/adq20iuv1a4x7/Email/${encodeURIComponent(email)}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        data: { Status: newStatus }
+      })
+    });
+
+    if (!res.ok) {
+      const errorData = await res.text();
+      console.error('Failed to update status:', errorData);
+      alert('Failed to update status. Check SheetDB API or column name.');
+    } else {
+      showStaffManager();
+    }
+  } catch (err) {
+    console.error('Error updating status:', err);
+    alert('Error updating status. Check console for details.');
+  }
+}
+
+
+
+async function createStaff(e) {
+  e.preventDefault();
+
+  const data = {
+    "Full Name": document.getElementById('newStaffName').value,
+    "Phone": document.getElementById('newStaffPhone').value,
+    "Email": document.getElementById('newStaffEmail').value,
+    "Password": document.getElementById('newStaffPass').value,
+    "Status": "Active"
+  };
+
+  try {
+    const res = await fetch('https://sheetdb.io/api/v1/adq20iuv1a4x7', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data })
+    });
+
+    if (!res.ok) {
+      const errData = await res.text();
+      console.error('Error creating staff:', errData);
+      alert('Failed to create staff. Please try again.');
+    } else {
+      alert('✅ Staff created successfully');
+      document.getElementById('newStaffName').value = '';
+      document.getElementById('newStaffPhone').value = '';
+      document.getElementById('newStaffEmail').value = '';
+      document.getElementById('newStaffPass').value = '';
+      showStaffSection();
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    alert('Something went wrong while creating staff.');
+  }
+}
+
+
+function toggleStaffCreate() {
+  const section = document.getElementById('staffCreateSection');
+  section.style.display = section.style.display === 'none' ? 'block' : 'none';
+}
+
+function showStaffSection() {
+  document.getElementById('staffListSection').style.display = 'block';
+  document.getElementById('staffCreateSection').style.display = 'none';
+  showStaffManager(); // reload staff list
+}
+
+function showCreateSection() {
+  document.getElementById('staffListSection').style.display = 'none';
+  document.getElementById('staffCreateSection').style.display = 'block';
+}
+
+
+
+
+
+async function verifyStaff() {
+  const mobile = document.getElementById('staffMobile').value.trim();
+  const password = document.getElementById('staffPassword').value.trim();
+  const errBox = document.getElementById('staffLoginErr');
+
+  if (!mobile || !password) {
+    errBox.textContent = 'Please enter both mobile and password';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch('https://sheetdb.io/api/v1/adq20iuv1a4x7'); // replace this
+    const staffList = await res.json();
+
+    const staff = staffList.find(
+  s => s.Phone === mobile && s.Password === password && s.Status === 'Active'
+);
+
+    if (staff) {
+      sessionStorage.setItem('verified', 'yes');
+      sessionStorage.setItem('user_type', 'staff');
+      sessionStorage.setItem('staff_name', staff["Full Name"]);
+      USER_TYPE = 'staff';
+      showApp();
+    } else {
+      errBox.textContent = 'Invalid credentials or inactive staff';
+      errBox.style.display = 'block';
+    }
+  } catch (err) {
+    console.error('Login error', err);
+    errBox.textContent = 'Something went wrong. Try again.';
+    errBox.style.display = 'block';
+  }
+}
+
+function closeStaffManager() {
+  document.getElementById('staffManager').classList.remove('active');
+}
+
+
+
 
 
